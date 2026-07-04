@@ -1,0 +1,73 @@
+name: Automerge (guarded)
+
+# Enables GitHub NATIVE auto-merge for low-risk, labelled, same-repo PRs.
+# It never checks out or runs PR code — only gh/API calls on metadata — so the
+# pull_request_target token is never exposed to untrusted code. The rules live
+# on the base branch (pull_request_target), so a PR cannot rewrite them to merge
+# itself. GitHub then merges ONLY when the branch's required status checks pass;
+# if main has no required checks, this workflow refuses to enable auto-merge.
+
+on:
+  pull_request_target:
+    types: [labeled, synchronize, ready_for_review]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  automerge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Evaluate guardrails and enable auto-merge
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          PR: ${{ github.event.pull_request.number }}
+          IS_FORK: ${{ github.event.pull_request.head.repo.full_name != github.repository }}
+          IS_DRAFT: ${{ github.event.pull_request.draft }}
+        run: |
+          set -euo pipefail
+          skip() { echo "AUTOMERGE SKIP: $1"; exit 0; }
+
+          [ "$IS_FORK" = "true" ] && skip "fork PR"
+          [ "$IS_DRAFT" = "true" ] && skip "draft PR"
+
+          labels="$(gh pr view "$PR" --repo "$REPO" --json labels --jq '.labels[].name')"
+          echo "labels: $labels"
+          echo "$labels" | grep -qx "automerge" || skip "no 'automerge' label"
+          echo "$labels" | grep -qx "manual-review-required" && skip "manual-review-required label"
+          echo "$labels" | grep -qx "no-automerge" && skip "no-automerge label"
+
+          files="$(gh api "repos/$REPO/pulls/$PR/files" --paginate --jq '.[].filename')"
+          echo "changed files:"; echo "$files"
+
+          # Denylist: anything sensitive blocks auto-merge.
+          deny='^\.github/|^leaderboard/results/|^pyproject\.toml$|^SECURITY\.md$|(^|/)\.env|secret|token|(^|/).*key|stripe|payment|openrouter|provider|telemetry|qcheck-private'
+          if echo "$files" | grep -qiE "$deny"; then
+            gh pr comment "$PR" --repo "$REPO" --body "Automerge blocked: PR touches a protected path. Merge manually after review." || true
+            skip "protected path touched"
+          fi
+
+          # Allowlist: every changed file must be within these prefixes.
+          allow='^README\.md$|^CONTRIBUTING\.md$|^leaderboard/README\.md$|^leaderboard/methodology\.md$|^leaderboard/scripts/build_leaderboard\.py$|^leaderboard/site/|^tests/'
+          while IFS= read -r f; do
+            [ -z "$f" ] && continue
+            echo "$f" | grep -qE "$allow" || skip "file outside allowlist: $f"
+          done <<< "$files"
+
+          # A change to the site generator additionally requires an explicit safe-public label.
+          if echo "$files" | grep -qx "leaderboard/scripts/build_leaderboard.py"; then
+            echo "$labels" | grep -qx "safe-public" || skip "build_leaderboard.py changed without 'safe-public' label"
+          fi
+
+          # SAFETY VALVE: refuse to auto-merge unless main has required status checks,
+          # otherwise auto-merge would merge with no gate.
+          contexts="$(gh api "repos/$REPO/branches/main/protection/required_status_checks" --jq '.contexts | length' 2>/dev/null || echo 0)"
+          if [ "${contexts:-0}" -lt 1 ]; then
+            gh pr comment "$PR" --repo "$REPO" --body "Automerge is installed but dormant: main has no required status checks yet. A maintainer must enable branch protection (require test (3.11) and test (3.12)) before auto-merge can run." || true
+            skip "main has no required status checks"
+          fi
+
+          echo "All guards passed — enabling native auto-merge (squash)."
+          gh pr merge "$PR" --repo "$REPO" --auto --squash --delete-branch

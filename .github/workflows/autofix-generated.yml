@@ -1,0 +1,56 @@
+name: Autofix generated site
+
+# Regenerates the deterministic leaderboard site artifacts and commits them back
+# to the PR branch if they drift. Same-repo PRs only (fork PRs get a read-only
+# token and are skipped). No network, no external APIs, no secrets.
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - "leaderboard/results/**"
+      - "leaderboard/scripts/build_leaderboard.py"
+      - "leaderboard/site/**"
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  autofix:
+    # Skip forks: they cannot (and must not) be pushed to from here.
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+          # Do NOT persist the token in git config: the PR's own
+          # build_leaderboard.py runs below, and must never have push access.
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Regenerate site (deterministic, no network, no token in scope)
+        run: |
+          python3 leaderboard/scripts/build_leaderboard.py leaderboard/results \
+            --out leaderboard/site/leaderboard.md
+      - name: Commit regenerated artifacts if they drifted
+        env:
+          # Token is only introduced AFTER the PR code has finished running.
+          GH_PUSH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          HEAD_REF: ${{ github.head_ref }}   # via env, never inline in the shell
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # Only the two generated files are ever staged.
+          git add leaderboard/site/leaderboard.md leaderboard/site/index.html
+          if git diff --cached --quiet; then
+            echo "No drift in generated site."
+          else
+            git commit -m "Autofix: regenerate leaderboard site"
+            git push "https://x-access-token:${GH_PUSH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" \
+              "HEAD:refs/heads/${HEAD_REF}"
+          fi
