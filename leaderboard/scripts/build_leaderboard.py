@@ -87,51 +87,6 @@ def to_markdown(rows: list) -> str:
 GITHUB = "https://github.com/JCQuankey/qcheck"
 METHODOLOGY_URL = GITHUB + "/blob/main/leaderboard/methodology.md"
 
-SITE_CSS = """
-:root{--navy:#1f3a65;--navy-2:#2b4d85;--ink:#161b26;--muted:#5b6472;
---bg:#ffffff;--tint:#f6f8fc;--line:#e6e9f0;--chip:#eef2f9}
-*{box-sizing:border-box}
-body{margin:0;color:var(--ink);background:var(--bg);
-font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-line-height:1.6;-webkit-font-smoothing:antialiased}
-a{color:var(--navy);text-decoration:none}
-a:hover{text-decoration:underline}
-.wrap{max-width:960px;margin:0 auto;padding:0 1.25rem}
-.hero{background:var(--tint);border-bottom:1px solid var(--line);padding:3.5rem 0 3rem}
-.hero .wrap{display:flex;flex-direction:column;align-items:center;text-align:center}
-.hero img{width:104px;height:104px}
-.hero h1{font-size:2rem;margin:.6rem 0 .1rem;letter-spacing:-.02em}
-.tag{font-size:1.35rem;font-weight:650;margin:.4rem 0 .2rem;color:var(--navy)}
-.sub{color:var(--muted);max-width:38rem;margin:.2rem 0 1.4rem}
-.btns{display:flex;gap:.75rem;flex-wrap:wrap;justify-content:center}
-.btn{display:inline-block;padding:.6rem 1.15rem;border-radius:8px;font-weight:600;
-border:1px solid var(--navy)}
-.btn.primary{background:var(--navy);color:#fff}
-.btn.primary:hover{background:var(--navy-2);text-decoration:none}
-.btn.ghost{background:#fff;color:var(--navy)}
-.btn.ghost:hover{background:var(--chip);text-decoration:none}
-section{padding:2.6rem 0;border-bottom:1px solid var(--line)}
-h2{font-size:1.25rem;letter-spacing:-.01em;margin:0 0 1rem}
-.lead{color:var(--muted);margin:0 0 1.4rem;max-width:44rem}
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:1rem}
-.card{border:1px solid var(--line);border-radius:10px;padding:1rem 1.1rem;background:#fff}
-.card h3{margin:0 0 .35rem;font-size:1rem;color:var(--navy)}
-.card p{margin:0;color:var(--muted);font-size:.95rem}
-table{border-collapse:collapse;width:100%;font-size:.95rem}
-th,td{border-bottom:1px solid var(--line);padding:.6rem .7rem;text-align:left}
-th{color:var(--muted);font-weight:600;font-size:.85rem;text-transform:uppercase;letter-spacing:.03em}
-.badge{display:inline-block;font-size:.72rem;font-weight:700;color:var(--navy);
-background:var(--chip);border-radius:99px;padding:.1rem .5rem;vertical-align:middle}
-.note{color:var(--muted);font-size:.92rem;margin:1rem 0 0}
-.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem}
-.step{border:1px solid var(--line);border-radius:10px;padding:1rem 1.1rem}
-.step .when{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
-.step h3{margin:.25rem 0 .3rem;font-size:1rem;color:var(--navy)}
-.step p{margin:0;color:var(--muted);font-size:.95rem}
-footer{padding:2rem 0 3rem;color:var(--muted);font-size:.92rem}
-footer .wrap{display:flex;flex-wrap:wrap;gap:.4rem 1.5rem;align-items:center}
-code{background:var(--chip);border-radius:5px;padding:.05rem .35rem;font-size:.9em}
-""".strip()
 
 
 def _row_cells(rows: list) -> str:
@@ -139,16 +94,19 @@ def _row_cells(rows: list) -> str:
     for i, r in enumerate(rows, 1):
         label = html.escape(str(r.get("model", "?")))
         if r.get("is_sample"):
-            label += " <span class='badge'>SAMPLE</span>"
+            label += " <span class='pill'>SAMPLE</span>"
         out += (
-            f"<tr><td>{i}</td><td>{label}</td>"
+            f"<tr><td class='num'>{i}</td><td>{label}</td>"
             f"<td>{html.escape(str(r.get('provider', '?')))}</td>"
-            f"<td>{float(r.get('pass_rate', 0.0)) * 100:.1f}%</td>"
-            f"<td>{r.get('tasks_passed', 0)} / {r.get('tasks_attempted', 0)}</td>"
-            f"<td>{r.get('unsafe_count', 0)}</td>"
-            f"<td>v{html.escape(str(r.get('qcheck_version', '?')))}</td></tr>"
+            f"<td class='num'>{float(r.get('pass_rate', 0.0)) * 100:.1f}%</td>"
+            f"<td class='num'>{r.get('tasks_passed', 0)} / {r.get('tasks_attempted', 0)}</td>"
+            f"<td class='num'>{r.get('unsafe_count', 0)}</td>"
+            f"<td class='num'>v{html.escape(str(r.get('qcheck_version', '?')))}</td></tr>"
         )
     return out or "<tr><td colspan='7'><em>no results yet</em></td></tr>"
+
+
+SITE_URL = "https://jcquankey.github.io/qcheck/"
 
 
 def to_html(rows: list) -> str:
@@ -156,58 +114,122 @@ def to_html(rows: list) -> str:
         "<!doctype html><html lang='en'><head><meta charset='utf-8'>"
         "<meta name='viewport' content='width=device-width, initial-scale=1'>"
         "<title>qcheck — review AI-generated quantum code</title>"
-        "<meta name='description' content='qcheck is a lightweight review layer for "
-        "AI-generated Qiskit and OpenQASM snippets. It catches common issues early.'>"
-        "<link rel='icon' type='image/png' href='assets/favicon.png'>"
-        f"<style>{SITE_CSS}</style></head><body>"
-        # hero
-        "<header class='hero'><div class='wrap'>"
-        "<img src='assets/qcheck-logo.png' alt='qcheck logo' width='104' height='104'>"
-        "<h1>qcheck</h1>"
-        "<p class='tag'>AI writes quantum code. qcheck reviews it.</p>"
-        "<p class='sub'>A lightweight review layer for AI-generated Qiskit and OpenQASM "
-        "snippets. It catches common issues early, so agents and developers can improve "
-        "quantum code before it reaches humans, CI, or simulators.</p>"
+        "<meta name='description' content='qcheck is a review layer for AI-generated "
+        "Qiskit and OpenQASM. Catch the avoidable before code reaches humans, CI, or simulators.'>"
+        f"<link rel='canonical' href='{SITE_URL}'>"
+        "<link rel='icon' sizes='32x32' type='image/png' href='assets/favicon-32.png'>"
+        "<link rel='icon' sizes='16x16' type='image/png' href='assets/favicon-16.png'>"
+        "<link rel='apple-touch-icon' href='assets/apple-touch-icon.png'>"
+        "<meta property='og:title' content='qcheck — AI writes quantum code. qcheck reviews it.'>"
+        "<meta property='og:description' content='A review layer for AI-generated Qiskit and OpenQASM.'>"
+        "<meta property='og:type' content='website'>"
+        f"<meta property='og:url' content='{SITE_URL}'>"
+        "<meta property='og:image' content='assets/og-qcheck.png'>"
+        "<meta name='twitter:card' content='summary_large_image'>"
+        "<link rel='stylesheet' href='brand.css'>"
+        "</head><body>"
+        "<a class='skip' href='#main'>Skip to content</a>"
+        # nav
+        "<nav class='nav' id='nav'><div class='wrap'>"
+        "<a class='brand' href='#top'><img src='assets/favicon-32.png' alt=''>"
+        "Quankey <span class='prod'>qcheck</span></a>"
+        "<div class='links'>"
+        "<a href='#benchmark'>Benchmark</a><a href='#checks'>Checks</a>"
+        "<a href='#roadmap'>Roadmap</a>"
+        f"<a class='btn primary' href='{GITHUB}'>GitHub</a>"
+        "</div></div></nav>"
+        "<main id='main'>"
+        # hero (2 columns)
+        "<header class='hero' id='top'><div class='wrap'>"
+        "<div>"
+        "<p class='eyebrow'>Quantum code review</p>"
+        "<h1>AI writes quantum code. qcheck reviews it.</h1>"
+        "<p class='sub'>A review layer for AI-generated Qiskit and OpenQASM.</p>"
+        "<p class='lede'>Catch the avoidable before code reaches humans, CI, or simulators.</p>"
         "<div class='btns'>"
         f"<a class='btn primary' href='{GITHUB}'>View on GitHub</a>"
-        "<a class='btn ghost' href='#benchmark'>See the static benchmark</a>"
-        "</div></div></header>"
-        "<main>"
+        "<a class='btn ghost' href='#benchmark'>See the benchmark</a>"
+        "</div></div>"
+        # evidence artifact (terminal)
+        "<div class='terminal'><div class='bar'><i></i><i></i><i></i></div>"
+        "<div class='body'>"
+        "<div><span class='p'>$</span> qcheck review bell.py</div>"
+        "<div class='c'># static review, no execution</div>"
+        "<div><span class='ok'>pass</span>  QuantumCircuit + measurement</div>"
+        "<div><span class='fl'>flag</span>  execute() removed in Qiskit 1.0</div>"
+        "<div><span class='fl'>flag</span>  Aer import removed</div>"
+        "<div class='c'># 1 passed &middot; 2 flagged</div>"
+        "</div></div>"
+        "</div></header>"
         # what qcheck checks
-        "<section><div class='wrap'>"
-        "<h2>What qcheck checks</h2>"
-        "<p class='lead'>qcheck v0 focuses on static review signals — no execution "
-        "required, so it is safe to run on untrusted model output in an agent loop or CI.</p>"
+        "<section class='section'><div class='wrap'>"
+        "<p class='eyebrow'>Signals</p><h2>What qcheck reviews</h2>"
+        "<p class='lead'>qcheck v0 reviews static signals — no execution required, so it "
+        "runs safely on untrusted model output inside an agent loop or CI.</p>"
         "<div class='cards'>"
-        "<div class='card'><h3>Qiskit API usage</h3><p>Flags removed-in-1.0 imports "
-        "like <code>execute()</code> and <code>Aer</code>, and deprecated gate aliases.</p></div>"
-        "<div class='card'><h3>OpenQASM parsing</h3><p>Header, register declarations, "
-        "index ranges, and measurement validity.</p></div>"
-        "<div class='card'><h3>Unsafe patterns</h3><p>Filesystem, network, process, or "
-        "dynamic-exec constructs are flagged before anything runs.</p></div>"
-        "<div class='card'><h3>Missing measurements</h3><p>Common structural mistakes "
-        "that make a circuit fail or return nothing useful.</p></div>"
-        "<div class='card'><h3>Common LLM mistakes</h3><p>The recurring errors models "
-        "make in generated quantum snippets.</p></div>"
+        "<div class='card'><div class='kicker'>Qiskit</div><h3>API usage</h3><p>Flags "
+        "removed-in-1.0 imports like <code>execute()</code> and <code>Aer</code>, and "
+        "deprecated gate aliases.</p></div>"
+        "<div class='card'><div class='kicker'>OpenQASM</div><h3>Parse issues</h3><p>Header, "
+        "register declarations, index ranges, and measurement validity.</p></div>"
+        "<div class='card'><div class='kicker'>Safety</div><h3>Unsafe patterns</h3><p>Filesystem, "
+        "network, process, or dynamic-exec constructs are flagged before anything runs.</p></div>"
+        "<div class='card'><div class='kicker'>Structure</div><h3>Missing measurements</h3><p>Common "
+        "mistakes that make a circuit fail or return nothing useful.</p></div>"
+        "<div class='card'><div class='kicker'>Models</div><h3>Common LLM mistakes</h3><p>The "
+        "recurring errors models make in generated quantum snippets.</p></div>"
+        "</div></div></section>"
+        # checks panel
+        "<section class='section' id='checks'><div class='wrap'>"
+        "<p class='eyebrow'>Review</p><h2>A review, not a verdict</h2>"
+        "<p class='lead'>Each snippet returns a set of signals — passed or flagged — that "
+        "a developer or agent can act on before the code runs.</p>"
+        "<div class='checks'>"
+        "<div class='row'><span class='dot pass'></span><span class='name'>modern_qiskit_api</span>"
+        "<span class='msg'>no removed 1.0 imports</span></div>"
+        "<div class='row'><span class='dot pass'></span><span class='name'>declared_registers</span>"
+        "<span class='msg'>qreg / creg present, in range</span></div>"
+        "<div class='row'><span class='dot pass'></span><span class='name'>has_measurement</span>"
+        "<span class='msg'>circuit measures qubits</span></div>"
+        "<div class='row'><span class='dot flag'></span><span class='name'>execute_removed</span>"
+        "<span class='msg'>execute() removed in Qiskit 1.0</span></div>"
+        "<div class='row'><span class='dot flag'></span><span class='name'>unsafe_side_effect</span>"
+        "<span class='msg'>writes to disk</span></div>"
+        "<div class='summary'>3 passed &middot; 2 flagged</div>"
+        "</div></div></section>"
+        # scope
+        "<section class='section'><div class='wrap'>"
+        "<p class='eyebrow'>Scope</p><h2>What it does — and doesn't</h2>"
+        "<div class='scope'>"
+        "<div class='col in'><h3>In scope</h3><ul>"
+        "<li>Static review of Qiskit / OpenQASM snippets</li>"
+        "<li>Common, avoidable failures</li>"
+        "<li>CI and agent preflight</li>"
+        "<li>Machine-readable JSON output</li></ul></div>"
+        "<div class='col out'><h3>Not in scope</h3><ul>"
+        "<li>Hardware execution</li>"
+        "<li>Algorithm correctness or formal proof</li>"
+        "<li>PQC migration</li></ul></div>"
         "</div></div></section>"
         # benchmark
-        "<section id='benchmark'><div class='wrap'>"
-        "<h2>Static benchmark</h2>"
-        "<p class='lead'>The qcheck benchmark tracks how AI-generated snippets perform "
-        "against qcheck's current static review checks. It reports "
-        "<code>static_pass_rate</code> on a small public task set as an early quality "
-        "signal. Rows marked <span class='badge'>SAMPLE</span> are demo data.</p>"
-        "<table><thead><tr><th>#</th><th>Model</th><th>Provider</th>"
-        "<th>Static pass rate</th><th>Passed / Attempted</th><th>Unsafe</th>"
-        "<th>qcheck</th></tr></thead><tbody>"
+        "<section class='section' id='benchmark'><div class='wrap'>"
+        "<p class='eyebrow'>Benchmark</p><h2>Static review benchmark</h2>"
+        "<p class='lead'>Tracks how AI-generated snippets perform against qcheck's current "
+        "static review checks. It reports <code>static_pass_rate</code> on a small public "
+        "task set as an early quality signal. Rows marked "
+        "<span class='pill'>SAMPLE</span> are demo data.</p>"
+        "<div class='tablewrap'><table><thead><tr>"
+        "<th>#</th><th>Model</th><th>Provider</th><th>Static pass rate</th>"
+        "<th>Passed / Attempted</th><th>Unsafe</th><th>qcheck</th>"
+        "</tr></thead><tbody>"
         + _row_cells(rows) +
-        "</tbody></table>"
+        "</tbody></table></div>"
         f"<p class='note'>Real runs will include provenance, task counts, qcheck version, "
         f"and prompt hash. See the <a href='{METHODOLOGY_URL}'>methodology</a>.</p>"
         "</div></section>"
         # roadmap
-        "<section><div class='wrap'>"
-        "<h2>Where it is going</h2>"
+        "<section class='section' id='roadmap'><div class='wrap'>"
+        "<p class='eyebrow'>Roadmap</p><h2>Where it is going</h2>"
         "<div class='steps'>"
         "<div class='step'><div class='when'>Today</div><h3>CLI</h3>"
         "<p>Static review for Qiskit and OpenQASM, with JSON output for agents and CI.</p></div>"
@@ -219,11 +241,14 @@ def to_html(rows: list) -> str:
         "</main>"
         # footer
         "<footer><div class='wrap'>"
+        "<p class='disc'>qcheck runs static review on AI-generated quantum code. It does "
+        "not run the code and does not claim algorithm correctness.</p>"
         f"<a href='{GITHUB}'>GitHub</a>"
         "<a href='mailto:dev@quankey.xyz'>dev@quankey.xyz</a>"
         "<a href='mailto:security@quankey.xyz'>security@quankey.xyz</a>"
         f"<a href='{GITHUB}/blob/main/LICENSE'>Apache-2.0</a>"
-        "</div></footer></body></html>"
+        "</div></footer>"
+        "</body></html>"
     )
 
 
