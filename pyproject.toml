@@ -8,7 +8,7 @@ build-backend = "setuptools.build_meta"
 # 2026-06-28). The CLI command and import package remain 'qcheck'.
 # See docs/plan/SESSION_01_HANDOFF.md for the open naming decisions.
 name = "qcheck-quantum"
-version = "0.1.0"
+version = "0.2.0"
 description = "Verify LLM-generated quantum code (Qiskit / OpenQASM) statically and safely."
 readme = "README.md"
 requires-python = ">=3.9"

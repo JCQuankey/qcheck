@@ -28,32 +28,36 @@ milliseconds, statically.
 ## Install
 
 ```bash
-# From PyPI (once published — distribution name is qcheck-quantum; the command is qcheck)
-pip install qcheck-quantum
-
-# From source (dev)
+# From source (works today)
 git clone https://github.com/JCQuankey/qcheck && cd qcheck
 pip install -e ".[dev]"     # editable install + pytest
 ```
 
-The PyPI **distribution** name is `qcheck-quantum` (the bare `qcheck` name was
-already taken on PyPI by an unrelated project); the installed **command** is
-`qcheck`. v0 has **zero runtime dependencies** (standard library only).
+PyPI publishing (`pip install qcheck-quantum`) is planned — the bare `qcheck`
+name is taken on PyPI, so the **distribution** will be `qcheck-quantum` while the
+**command** stays `qcheck`. v0 has **zero runtime dependencies** (standard
+library only).
 
 ## Quickstart
 
 ```bash
-qcheck verify examples/broken_qiskit_execute.py     # or: python3 -m qcheck verify <file>
+qcheck verify examples/broken_qiskit_execute.py   # one file
+qcheck verify examples/                            # a whole directory (recursive)
+qcheck verify a.py b.qasm circuits/                # several paths at once
+cat snippet.py | qcheck verify -                   # stdin (for agents)
 ```
 
 Example output:
 
 ```
-qcheck 0.1.0  [FAIL]  examples/broken_qiskit_execute.py  (qiskit)
+qcheck 0.2.0  [FAIL]  examples/broken_qiskit_execute.py  (qiskit)
   [error] QISKIT-REMOVED-IMPORT: 'from qiskit import execute' was removed in Qiskit 1.0
   [warning] QISKIT-DEPRECATED-GATE: QuantumCircuit.cnot() is deprecated; use .cx().
   fix -> Replace execute() with a primitive (Sampler/Estimator) or backend.run().
 ```
+
+Reviewing multiple files prints a per-file summary and exits with the worst
+result found (unsafe > failed > passed).
 
 ## JSON output (for agents & CI)
 
@@ -61,11 +65,28 @@ qcheck 0.1.0  [FAIL]  examples/broken_qiskit_execute.py  (qiskit)
 qcheck verify snippet.py --json
 ```
 
-Returns `{status, framework, syntax_valid, unsafe, static_checks, errors,
-warnings, suggested_fixes, confidence, runnable_in_simulator, qcheck_version}`.
-Designed to be parsed by an LLM agent that just generated the code, or by a CI
-gate. Exit codes: `0` pass, `1` verification failed, `2` unsafe/unsupported,
-`3` internal error.
+For a single file, returns `{status, framework, syntax_valid, unsafe,
+static_checks, errors, warnings, suggested_fixes, confidence,
+runnable_in_simulator, qcheck_version}`. For multiple files or a directory,
+returns an envelope `{qcheck_version, results: [<per-file object + "path">...],
+summary: {files, passed, failed, unsafe, read_errors}}`. Designed to be parsed by
+an LLM agent that just generated the code, or by a CI gate. Exit codes: `0` pass,
+`1` verification failed, `2` unsafe/unsupported, `3` internal error.
+
+## Use it in CI (GitHub Action)
+
+qcheck ships a composite GitHub Action. In your repo's
+`.github/workflows/qcheck.yml`:
+
+```yaml
+- uses: actions/checkout@v4
+- uses: JCQuankey/qcheck@main
+  with:
+    paths: "."     # or a folder, e.g. "circuits/"
+```
+
+The step fails the job when qcheck finds errors or unsafe code. See
+[`examples/github-action.yml`](examples/github-action.yml).
 
 ## What v0 checks
 
