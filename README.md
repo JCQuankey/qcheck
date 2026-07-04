@@ -56,7 +56,7 @@ cat snippet.py | qcheck verify -                   # stdin (for agents)
 Example output:
 
 ```
-qcheck 0.2.0  [FAIL]  examples/broken_qiskit_execute.py  (qiskit)
+qcheck 0.3.0  [FAIL]  examples/broken_qiskit_execute.py  (qiskit)
   [error] QISKIT-REMOVED-IMPORT: 'from qiskit import execute' was removed in Qiskit 1.0
   [warning] QISKIT-DEPRECATED-GATE: QuantumCircuit.cnot() is deprecated; use .cx().
   fix -> Replace execute() with a primitive (Sampler/Estimator) or backend.run().
@@ -89,7 +89,7 @@ qcheck ships a composite GitHub Action. In your repo's
 
 ```yaml
 - uses: actions/checkout@v4
-- uses: JCQuankey/qcheck@v0.2.0
+- uses: JCQuankey/qcheck@v0.3.0
   with:
     paths: "."     # or a folder, e.g. "circuits/"
 ```
@@ -115,7 +115,7 @@ permissions:
   security-events: write
 steps:
   - uses: actions/checkout@v4
-  - uses: JCQuankey/qcheck@v0.2.0
+  - uses: JCQuankey/qcheck@v0.3.0
     with:
       format: sarif
       output: qcheck.sarif
@@ -129,10 +129,10 @@ uses a synthetic `stdin` URI and is not meant for code-scanning upload.
 
 ## Rule catalog (explain your findings)
 
-Every qcheck finding carries a **stable rule id** (for example
-`QISKIT-REMOVED-IMPORT`). Each id is backed by catalog metadata - a title,
-category, default severity, a plain-language summary, why it matters, and a
-recommended next step - so a developer or an agent can act on a finding right
+qcheck ships **23 rules**, and every finding carries a **stable rule id** (for
+example `QISKIT-REMOVED-IMPORT`). Each id is backed by catalog metadata - a
+title, category, default severity, a plain-language summary, why it matters, and
+a recommended next step - so a developer or an agent can act on a finding right
 away and triage faster.
 
 Browse the catalog from the CLI:
