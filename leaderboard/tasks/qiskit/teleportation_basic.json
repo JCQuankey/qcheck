@@ -1,0 +1,18 @@
+{
+  "id": "qiskit_teleportation_basic",
+  "title": "Basic quantum teleportation skeleton in Qiskit",
+  "framework": "qiskit",
+  "language": "python",
+  "difficulty": "medium",
+  "prompt": "Write a Qiskit circuit skeleton for basic quantum teleportation of one qubit state from Alice to Bob (3 qubits, entanglement, Bell measurement, corrections).",
+  "expected_features": [
+    "QuantumCircuit with 3 qubits",
+    "entangling gates (H, CX)",
+    "measurement",
+    "modern Qiskit API (no removed execute/Aer imports)"
+  ],
+  "qcheck_mode": "static",
+  "scored_by": "qcheck-static-v0",
+  "semantic_execution_required": false,
+  "notes": "A common LLM failure mode here is using execute()/Aer imports removed in Qiskit 1.0. qcheck v0 catches that statically. Full teleportation correctness needs semantic execution (future work)."
+}

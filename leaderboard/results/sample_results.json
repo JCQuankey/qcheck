@@ -1,81 +1,123 @@
 {
-  "leaderboard": [
+  "model": "demo-model",
+  "provider": "sample",
+  "is_sample": true,
+  "scored_by": "qcheck-static-v0.1.0",
+  "qcheck_version": "0.1.0",
+  "generated_at": "2026-07-04",
+  "tasks_attempted": 6,
+  "tasks_passed": 3,
+  "pass_rate": 0.5,
+  "counts": {
+    "pass": 3,
+    "warning": 0,
+    "fail": 2,
+    "unsafe": 1,
+    "error": 0
+  },
+  "unsafe_count": 1,
+  "failures": [
     {
-      "model": "demo-fixtures",
-      "counts": {
-        "pass": 2,
-        "warning": 0,
-        "fail": 4,
-        "unsafe": 1
-      },
-      "pass_rate": 0.286,
-      "tasks": [
-        {
-          "file": "invalid_bad_measurement.qasm",
-          "framework": "qasm2",
-          "status": "fail",
-          "error_ids": [
-            "QASM-INDEX-RANGE"
-          ],
-          "confidence": 0.6
-        },
-        {
-          "file": "invalid_missing_register.qasm",
-          "framework": "qasm2",
-          "status": "fail",
-          "error_ids": [
-            "QASM-UNDECLARED-REG",
-            "QASM-UNDECLARED-REG",
-            "QASM-UNDECLARED-REG",
-            "QASM-MEASURE-SRC"
-          ],
-          "confidence": 0.0
-        },
-        {
-          "file": "malicious.py",
-          "framework": "qiskit",
-          "status": "unsafe",
-          "error_ids": [
-            "PY-UNSAFE-IMPORT",
-            "PY-UNSAFE-CALL"
-          ],
-          "confidence": 0.2
-        },
-        {
-          "file": "qiskit_invalid_api.py",
-          "framework": "qiskit",
-          "status": "fail",
-          "error_ids": [
-            "QISKIT-REMOVED-IMPORT",
-            "QISKIT-REMOVED-IMPORT",
-            "QISKIT-EXECUTE"
-          ],
-          "confidence": 0.0
-        },
-        {
-          "file": "qiskit_missing_import.py",
-          "framework": "qiskit",
-          "status": "fail",
-          "error_ids": [
-            "QISKIT-MISSING-IMPORT"
-          ],
-          "confidence": 0.6
-        },
-        {
-          "file": "valid_bell.qasm",
-          "framework": "qasm2",
-          "status": "pass",
-          "error_ids": [],
-          "confidence": 1.0
-        },
-        {
-          "file": "valid_bell_qiskit.py",
-          "framework": "qiskit",
-          "status": "pass",
-          "error_ids": [],
-          "confidence": 1.0
-        }
-      ]
+      "file": "openqasm_measurement_registers.qasm",
+      "task_id": "openqasm_measurement_registers",
+      "framework": "qasm2",
+      "status": "fail",
+      "error_ids": [
+        "QASM-INDEX-RANGE",
+        "QASM-INDEX-RANGE"
+      ],
+      "warning_ids": [],
+      "confidence": 0.2
+    },
+    {
+      "file": "qiskit_grover_toy.py",
+      "task_id": "qiskit_grover_toy",
+      "framework": "qiskit",
+      "status": "unsafe",
+      "error_ids": [
+        "PY-UNSAFE-CALL"
+      ],
+      "warning_ids": [],
+      "confidence": 0.6
+    },
+    {
+      "file": "qiskit_teleportation_basic.py",
+      "task_id": "qiskit_teleportation_basic",
+      "framework": "qiskit",
+      "status": "fail",
+      "error_ids": [
+        "QISKIT-REMOVED-IMPORT",
+        "QISKIT-REMOVED-IMPORT",
+        "QISKIT-EXECUTE"
+      ],
+      "warning_ids": [],
+      "confidence": 0.0
+    }
+  ],
+  "warnings": 0,
+  "tasks": [
+    {
+      "file": "openqasm_bell_state.qasm",
+      "task_id": "openqasm_bell_state",
+      "framework": "qasm2",
+      "status": "pass",
+      "error_ids": [],
+      "warning_ids": [],
+      "confidence": 1.0
+    },
+    {
+      "file": "openqasm_measurement_registers.qasm",
+      "task_id": "openqasm_measurement_registers",
+      "framework": "qasm2",
+      "status": "fail",
+      "error_ids": [
+        "QASM-INDEX-RANGE",
+        "QASM-INDEX-RANGE"
+      ],
+      "warning_ids": [],
+      "confidence": 0.2
+    },
+    {
+      "file": "qiskit_bell_state.py",
+      "task_id": "qiskit_bell_state",
+      "framework": "qiskit",
+      "status": "pass",
+      "error_ids": [],
+      "warning_ids": [],
+      "confidence": 1.0
+    },
+    {
+      "file": "qiskit_ghz_state.py",
+      "task_id": "qiskit_ghz_state",
+      "framework": "qiskit",
+      "status": "pass",
+      "error_ids": [],
+      "warning_ids": [],
+      "confidence": 1.0
+    },
+    {
+      "file": "qiskit_grover_toy.py",
+      "task_id": "qiskit_grover_toy",
+      "framework": "qiskit",
+      "status": "unsafe",
+      "error_ids": [
+        "PY-UNSAFE-CALL"
+      ],
+      "warning_ids": [],
+      "confidence": 0.6
+    },
+    {
+      "file": "qiskit_teleportation_basic.py",
+      "task_id": "qiskit_teleportation_basic",
+      "framework": "qiskit",
+      "status": "fail",
+      "error_ids": [
+        "QISKIT-REMOVED-IMPORT",
+        "QISKIT-REMOVED-IMPORT",
+        "QISKIT-EXECUTE"
+      ],
+      "warning_ids": [],
+      "confidence": 0.0
     }
   ]
 }

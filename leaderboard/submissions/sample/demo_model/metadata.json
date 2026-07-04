@@ -1,0 +1,8 @@
+{
+  "model": "demo-model",
+  "provider": "sample",
+  "date": "2026-07-04",
+  "temperature": null,
+  "is_sample": true,
+  "notes": "SAMPLE ONLY. These files are hand-written illustrations to demonstrate the evaluation pipeline. They are NOT the output of any real language model and do NOT represent any model's real performance."
+}
