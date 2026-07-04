@@ -56,7 +56,7 @@ cat snippet.py | qcheck verify -                   # stdin (for agents)
 Example output:
 
 ```
-qcheck 0.4.0  [FAIL]  examples/broken_qiskit_execute.py  (qiskit)
+qcheck 0.5.0  [FAIL]  examples/broken_qiskit_execute.py  (qiskit)
   [error] QISKIT-REMOVED-IMPORT: 'from qiskit import execute' was removed in Qiskit 1.0
   [warning] QISKIT-DEPRECATED-GATE: QuantumCircuit.cnot() is deprecated; use .cx().
   fix -> Replace execute() with a primitive (Sampler/Estimator) or backend.run().
@@ -89,7 +89,7 @@ qcheck ships a composite GitHub Action. In your repo's
 
 ```yaml
 - uses: actions/checkout@v4
-- uses: JCQuankey/qcheck@v0.4.0
+- uses: JCQuankey/qcheck@v0.5.0
   with:
     paths: "."     # or a folder, e.g. "circuits/"
 ```
@@ -115,7 +115,7 @@ permissions:
   security-events: write
 steps:
   - uses: actions/checkout@v4
-  - uses: JCQuankey/qcheck@v0.4.0
+  - uses: JCQuankey/qcheck@v0.5.0
     with:
       format: sarif
       output: qcheck.sarif
