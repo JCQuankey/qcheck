@@ -18,11 +18,13 @@ import sys
 from pathlib import Path
 
 CAVEAT = (
-    "**What this measures:** the qcheck *static* verdict (is the generated code "
-    "well-formed, modern, safe, and likely to run?) on small Qiskit/OpenQASM "
-    "tasks. **What it does NOT measure:** semantic/algorithmic correctness, "
-    "quantum advantage, or hardware performance. Rows marked _SAMPLE_ are "
-    "hand-written demos, not real model results."
+    "**Static checks only — this does not prove quantum correctness.** "
+    "**What this measures:** the qcheck *static* pass rate (is the generated code "
+    "well-formed, using modern APIs, safe, and likely to run?) on a small public "
+    "Qiskit/OpenQASM task set. **What it does NOT measure:** semantic/algorithmic "
+    "correctness, quantum advantage, hardware performance, or runtime success. "
+    "This is a small, illustrative static-check benchmark, not a definitive model "
+    "ranking. Rows marked _SAMPLE_ are hand-written demos, not real model results."
 )
 
 
@@ -56,9 +58,9 @@ def _label(row: dict) -> str:
 
 def to_markdown(rows: list) -> str:
     lines = [
-        "# Which LLM writes correct quantum code?",
+        "# qcheck static-check leaderboard — LLM-generated quantum code",
         "",
-        "_Experimental qcheck static leaderboard. See "
+        "_Experimental static-check table (not a correctness ranking). See "
         "[methodology](../methodology.md)._",
         "",
         CAVEAT,
@@ -88,7 +90,7 @@ def to_html(rows: list) -> str:
     head = (
         "<!doctype html><html lang='en'><head><meta charset='utf-8'>"
         "<meta name='viewport' content='width=device-width, initial-scale=1'>"
-        "<title>Which LLM writes correct quantum code?</title>"
+        "<title>qcheck static-check leaderboard — LLM-generated quantum code</title>"
         "<style>body{font-family:system-ui,sans-serif;max-width:820px;margin:2rem auto;"
         "padding:0 1rem;line-height:1.5}table{border-collapse:collapse;width:100%}"
         "th,td{border:1px solid #ccc;padding:6px 10px;text-align:left}"
@@ -111,15 +113,17 @@ def to_html(rows: list) -> str:
     if not rows:
         rows_html = "<tr><td colspan='7'><em>no results yet</em></td></tr>"
     caveat_html = (
-        "<p class='caveat'>Measures the qcheck <strong>static</strong> verdict on small "
-        "Qiskit/OpenQASM tasks. It does <strong>not</strong> measure semantic correctness, "
-        "quantum advantage, or hardware performance. Rows marked <em>(SAMPLE)</em> are "
-        "hand-written demos, not real model results.</p>"
+        "<p class='caveat'><strong>Static checks only — this does not prove quantum "
+        "correctness.</strong> Reports the qcheck <strong>static pass rate</strong> on a "
+        "small public Qiskit/OpenQASM task set. It does <strong>not</strong> measure "
+        "semantic correctness, quantum advantage, hardware performance, or runtime success. "
+        "A small, illustrative static-check benchmark, not a definitive model ranking. "
+        "Rows marked <em>(SAMPLE)</em> are hand-written demos, not real model results.</p>"
     )
     return (
         head
-        + "<h1>Which LLM writes correct quantum code?</h1>"
-        + "<p><em>Experimental qcheck static leaderboard.</em></p>"
+        + "<h1>qcheck static-check leaderboard — LLM-generated quantum code</h1>"
+        + "<p><em>Experimental static-check table (not a correctness ranking).</em></p>"
         + caveat_html
         + "<table><thead><tr><th>#</th><th>Model</th><th>Provider</th>"
         + "<th>Static pass rate</th><th>Passed / Attempted</th><th>Unsafe</th>"

@@ -1,10 +1,13 @@
-# qcheck leaderboard — "Which LLM writes correct quantum code?"
+# qcheck static-check leaderboard — LLM-generated quantum code
 
-An **experimental** benchmark scaffold that runs [qcheck](../README.md) over
-model-generated quantum code and reports a **static** pass/fail/unsafe verdict.
+A small **static-check benchmark** for LLM-generated quantum snippets. It runs
+[qcheck](../README.md) over model outputs and reports whether they pass qcheck's
+current **static** checks (pass/fail/unsafe).
 
-> Status: MVP. The only results published today are hand-written **SAMPLE**
-> demos (see `submissions/sample/`). No real model has been run yet.
+> **Static checks only.** This is **not** a proof of quantum correctness and
+> should **not** be treated as a definitive model ranking or a scientific
+> benchmark. The task set is small and early. The only results published today
+> are hand-written **SAMPLE/demo** rows — no real model has been run yet.
 
 ## Hosted site
 
