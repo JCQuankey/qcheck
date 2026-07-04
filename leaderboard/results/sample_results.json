@@ -1,0 +1,81 @@
+{
+  "leaderboard": [
+    {
+      "model": "demo-fixtures",
+      "counts": {
+        "pass": 2,
+        "warning": 0,
+        "fail": 4,
+        "unsafe": 1
+      },
+      "pass_rate": 0.286,
+      "tasks": [
+        {
+          "file": "invalid_bad_measurement.qasm",
+          "framework": "qasm2",
+          "status": "fail",
+          "error_ids": [
+            "QASM-INDEX-RANGE"
+          ],
+          "confidence": 0.6
+        },
+        {
+          "file": "invalid_missing_register.qasm",
+          "framework": "qasm2",
+          "status": "fail",
+          "error_ids": [
+            "QASM-UNDECLARED-REG",
+            "QASM-UNDECLARED-REG",
+            "QASM-UNDECLARED-REG",
+            "QASM-MEASURE-SRC"
+          ],
+          "confidence": 0.0
+        },
+        {
+          "file": "malicious.py",
+          "framework": "qiskit",
+          "status": "unsafe",
+          "error_ids": [
+            "PY-UNSAFE-IMPORT",
+            "PY-UNSAFE-CALL"
+          ],
+          "confidence": 0.2
+        },
+        {
+          "file": "qiskit_invalid_api.py",
+          "framework": "qiskit",
+          "status": "fail",
+          "error_ids": [
+            "QISKIT-REMOVED-IMPORT",
+            "QISKIT-REMOVED-IMPORT",
+            "QISKIT-EXECUTE"
+          ],
+          "confidence": 0.0
+        },
+        {
+          "file": "qiskit_missing_import.py",
+          "framework": "qiskit",
+          "status": "fail",
+          "error_ids": [
+            "QISKIT-MISSING-IMPORT"
+          ],
+          "confidence": 0.6
+        },
+        {
+          "file": "valid_bell.qasm",
+          "framework": "qasm2",
+          "status": "pass",
+          "error_ids": [],
+          "confidence": 1.0
+        },
+        {
+          "file": "valid_bell_qiskit.py",
+          "framework": "qiskit",
+          "status": "pass",
+          "error_ids": [],
+          "confidence": 1.0
+        }
+      ]
+    }
+  ]
+}

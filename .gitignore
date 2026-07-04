@@ -1,0 +1,56 @@
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Build / packaging artifacts
+build/
+dist/
+*.egg-info/
+*.egg
+.eggs/
+
+# Coverage / test artifacts
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+.tox/
+.nox/
+
+# Local telemetry / logs (planned; never commit user data)
+*.log
+.qcheck/
+qcheck_telemetry*.jsonl
+
+# Secrets / env (never commit)
+.env
+.env.*
+*.key
+*.pem
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*~
+
+# Internal planning / strategy — NOT for the public repo.
+# docs/plan/ references private strategy lines (FluxQ/Quankey), monetization,
+# and kill-criteria. Kept local only; excluded from the public OSS repo.
+docs/plan/
+
+# NOTE: fixtures/, tests/, examples/, and leaderboard/ (including sample_results.json)
+# are part of the repo and are intentionally NOT ignored.

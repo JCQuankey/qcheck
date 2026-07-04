@@ -1,0 +1,9 @@
+{
+  "id": "task_001_bell_state",
+  "title": "Bell state",
+  "framework": "any",
+  "prompt": "Write code that creates a 2-qubit Bell state (entangle q0 and q1 with H then CNOT) and measures both qubits. Use Qiskit or OpenQASM.",
+  "reference_notes": "Must declare 2 qubits + 2 classical bits, apply H to q0, CX(q0,q1), and measure both. In Qiskit must import QuantumCircuit and not use removed APIs (execute/Aer from qiskit). In QASM2 must have the OPENQASM 2.0 header and declared registers.",
+  "graded_by": "qcheck-static-v0",
+  "source": "original"
+}
