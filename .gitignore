@@ -47,9 +47,7 @@ Thumbs.db
 *.swp
 *~
 
-# Internal planning / strategy — NOT for the public repo.
-# docs/plan/ references private strategy lines (FluxQ/Quankey), monetization,
-# and kill-criteria. Kept local only; excluded from the public OSS repo.
+# Internal planning notes — kept local, not part of the public repo.
 docs/plan/
 
 # NOTE: fixtures/, tests/, examples/, and leaderboard/ (including sample_results.json)

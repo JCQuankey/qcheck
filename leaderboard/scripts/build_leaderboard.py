@@ -45,8 +45,13 @@ def load_results(path: Path) -> list:
     return rows
 
 
+def _md_cell(value) -> str:
+    """Make a value safe for a Markdown table cell (escape pipes, flatten newlines)."""
+    return str(value).replace("|", "\\|").replace("\r", " ").replace("\n", " ")
+
+
 def _label(row: dict) -> str:
-    return f"{row.get('model', '?')}" + (" _(SAMPLE)_" if row.get("is_sample") else "")
+    return _md_cell(row.get("model", "?")) + (" _(SAMPLE)_" if row.get("is_sample") else "")
 
 
 def to_markdown(rows: list) -> str:
@@ -66,7 +71,7 @@ def to_markdown(rows: list) -> str:
     for i, r in enumerate(rows, 1):
         pr = f"{float(r.get('pass_rate', 0.0)) * 100:.1f}%"
         lines.append(
-            f"| {i} | {_label(r)} | {r.get('provider', '?')} | {pr} | "
+            f"| {i} | {_label(r)} | {_md_cell(r.get('provider', '?'))} | {pr} | "
             f"{r.get('tasks_passed', 0)} / {r.get('tasks_attempted', 0)} | "
             f"{r.get('unsafe_count', 0)} | v{r.get('qcheck_version', '?')} |"
         )
