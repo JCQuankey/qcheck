@@ -39,7 +39,7 @@ def test_markdown_labels_sample_and_shows_rate(tmp_path: Path):
     assert "model-a" in md
     assert "SAMPLE" in md
     assert "50.0%" in md
-    assert "does NOT measure" in md  # honesty caveat present
+    assert "demo data" in md  # honesty note present (SAMPLE rows are demo data)
 
 
 def test_rows_sorted_by_pass_rate_desc(tmp_path: Path):

@@ -6,14 +6,14 @@ narrow, honest thing well, rather than a broad thing badly.
 ## At a glance
 
 - **Metric:** `static_pass_rate` — the fraction of tasks whose output passes
-  qcheck's current static checks (runs-clean-on-modern-API).
-- **What it measures:** pass rate against qcheck static checks (well-formed, modern
-  APIs, declared registers, in-range indices, has a measurement, no unsafe constructs).
-- **What it does NOT measure:** mathematical/semantic correctness, algorithmic
-  optimality, hardware performance, runtime success, or formal verification.
+  qcheck's current static review checks (well-formed, modern APIs, declared
+  registers, in-range indices, has a measurement, no unsafe constructs).
+- **What it's useful for:** comparing avoidable code-quality failures across a
+  small public task set — an early review signal for agents and LLM workflows.
+- **How to read it:** as an early review signal, not as a full evaluation of
+  quantum algorithm quality (it reviews code without executing it).
 - **Current task set:** small, early, and subject to change.
 - **Current rows:** SAMPLE/demo unless explicitly marked real.
-- **Not** a definitive model ranking and **not** a scientific benchmark.
 
 ## Benchmark scope
 

@@ -1,8 +1,8 @@
-# qcheck static-check leaderboard — LLM-generated quantum code
+# qcheck static review benchmark
 
-_Experimental static-check table (not a correctness ranking). See [methodology](../methodology.md)._
+_A small public benchmark for reviewing AI-generated Qiskit and OpenQASM snippets with qcheck. See [methodology](../methodology.md)._
 
-**Static checks only — this does not prove quantum correctness.** **What this measures:** the qcheck *static* pass rate (is the generated code well-formed, using modern APIs, safe, and likely to run?) on a small public Qiskit/OpenQASM task set. **What it does NOT measure:** semantic/algorithmic correctness, quantum advantage, hardware performance, or runtime success. This is a small, illustrative static-check benchmark, not a definitive model ranking. Rows marked _SAMPLE_ are hand-written demos, not real model results.
+A small public benchmark for reviewing AI-generated Qiskit and OpenQASM snippets with qcheck. It reports `static_pass_rate` — the share of snippets that pass qcheck's current static review checks — as an early quality signal. Rows marked _SAMPLE_ are demo data; real runs will include provenance, task counts, qcheck version, and prompt hash.
 
 | # | Model | Provider | Static pass rate | Passed / Attempted | Unsafe | qcheck |
 |---|-------|----------|------------------|--------------------|--------|--------|
