@@ -42,6 +42,12 @@ def check_qasm(text: str, framework: str) -> Tuple[bool, List[Finding], List[str
             return True
         return False
 
+    def _zero(name: str, size: int, line: int) -> None:
+        if size == 0:
+            findings.append(Finding(
+                "QASM-ZERO-REGISTER", "error",
+                f"Register {name!r} is declared with size 0.", line))
+
     for i, raw in enumerate(text.split("\n"), start=1):
         line = raw.split("//", 1)[0].strip()
         if not line:
@@ -83,11 +89,13 @@ def check_qasm(text: str, framework: str) -> Tuple[bool, List[Finding], List[str
         m = _QREG2.match(stmt)
         if m:
             _dup(m.group(1), i)
+            _zero(m.group(1), int(m.group(2)), i)
             qregs[m.group(1)] = int(m.group(2))
             continue
         m = _CREG2.match(stmt)
         if m:
             _dup(m.group(1), i)
+            _zero(m.group(1), int(m.group(2)), i)
             cregs[m.group(1)] = int(m.group(2))
             continue
         m = _QUBIT3.match(stmt)
@@ -99,6 +107,7 @@ def check_qasm(text: str, framework: str) -> Tuple[bool, List[Finding], List[str
                     "OpenQASM 2 program; use 'qreg name[n];' or switch the "
                     "header to 'OPENQASM 3.0;'.", i))
             _dup(m.group(2), i)
+            _zero(m.group(2), int(m.group(1)), i)
             qregs[m.group(2)] = int(m.group(1))
             continue
         m = _BIT3.match(stmt)
@@ -110,6 +119,7 @@ def check_qasm(text: str, framework: str) -> Tuple[bool, List[Finding], List[str
                     "OpenQASM 2 program; use 'creg name[n];' or switch the "
                     "header to 'OPENQASM 3.0;'.", i))
             _dup(m.group(2), i)
+            _zero(m.group(2), int(m.group(1)), i)
             cregs[m.group(2)] = int(m.group(1))
             continue
 
@@ -125,6 +135,16 @@ def check_qasm(text: str, framework: str) -> Tuple[bool, List[Finding], List[str
         # generic gate application: validate every indexed register reference
         saw_gate = True
         _check_refs(stmt, qregs, cregs, i, findings, declared_required=True)
+        # same register element used more than once as an operand (e.g. cx q[0],q[0])
+        seen_ops = set()
+        for nm, ix in _INDEXED.findall(stmt):
+            if (nm, ix) in seen_ops:
+                findings.append(Finding(
+                    "QASM-SAME-QUBIT-2Q", "warning",
+                    f"Gate uses {nm}[{ix}] more than once as an operand; a "
+                    f"two-qubit gate needs two distinct qubits.", i))
+                break
+            seen_ops.add((nm, ix))
 
     if framework == "qasm2" and not header_seen:
         findings.insert(0, Finding(
