@@ -13,7 +13,7 @@ inputs:
     required: false
     default: "human"
   output:
-    description: "Write output to this file (used with format: sarif, e.g. qcheck.sarif)."
+    description: "Write output to this file (used with format: sarif, e.g. qcheck.sarif). A path with spaces is supported."
     required: false
     default: ""
   args:
@@ -32,14 +32,19 @@ runs:
       run: python -m pip install --quiet "${{ github.action_path }}"
     - name: Review quantum code
       shell: bash
-      # Inputs are passed via env (never inlined into the shell) to avoid injection.
+      # Inputs are passed via env (never inlined into the shell) to avoid
+      # injection, and the command is assembled as an array. `paths` and `args`
+      # are space-separated (multiple values) and word-split; `output` is a
+      # single value and is quoted, so an output path with spaces works.
       env:
         QC_PATHS: ${{ inputs.paths }}
         QC_FORMAT: ${{ inputs.format }}
         QC_OUTPUT: ${{ inputs.output }}
         QC_ARGS: ${{ inputs.args }}
       run: |
-        fmt=""
-        [ -n "$QC_FORMAT" ] && fmt="--format $QC_FORMAT"
-        [ -n "$QC_OUTPUT" ] && fmt="$fmt --output $QC_OUTPUT"
-        qcheck verify $QC_PATHS $fmt $QC_ARGS
+        cmd=(qcheck verify)
+        read -r -a _paths <<< "$QC_PATHS"; cmd+=("${_paths[@]}")
+        [ -n "$QC_FORMAT" ] && cmd+=(--format "$QC_FORMAT")
+        [ -n "$QC_OUTPUT" ] && cmd+=(--output "$QC_OUTPUT")
+        if [ -n "$QC_ARGS" ]; then read -r -a _extra <<< "$QC_ARGS"; cmd+=("${_extra[@]}"); fi
+        "${cmd[@]}"
