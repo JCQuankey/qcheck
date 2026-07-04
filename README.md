@@ -56,7 +56,7 @@ cat snippet.py | qcheck verify -                   # stdin (for agents)
 Example output:
 
 ```
-qcheck 0.3.0  [FAIL]  examples/broken_qiskit_execute.py  (qiskit)
+qcheck 0.4.0  [FAIL]  examples/broken_qiskit_execute.py  (qiskit)
   [error] QISKIT-REMOVED-IMPORT: 'from qiskit import execute' was removed in Qiskit 1.0
   [warning] QISKIT-DEPRECATED-GATE: QuantumCircuit.cnot() is deprecated; use .cx().
   fix -> Replace execute() with a primitive (Sampler/Estimator) or backend.run().
@@ -89,7 +89,7 @@ qcheck ships a composite GitHub Action. In your repo's
 
 ```yaml
 - uses: actions/checkout@v4
-- uses: JCQuankey/qcheck@v0.3.0
+- uses: JCQuankey/qcheck@v0.4.0
   with:
     paths: "."     # or a folder, e.g. "circuits/"
 ```
@@ -115,7 +115,7 @@ permissions:
   security-events: write
 steps:
   - uses: actions/checkout@v4
-  - uses: JCQuankey/qcheck@v0.3.0
+  - uses: JCQuankey/qcheck@v0.4.0
     with:
       format: sarif
       output: qcheck.sarif
@@ -145,6 +145,9 @@ qcheck rules --json     # full metadata, for agents and CI
 The same metadata enriches SARIF `driver.rules[]`, so code-scanning alerts show
 each rule's description, severity and guidance inline. Rule ids are stable across
 releases, which keeps CI gates and agent loops consistent as qcheck grows.
+
+qcheck's JSON, `qcheck rules --json`, SARIF and exit codes are documented as
+stable output contracts for agents and CI in [`docs/CONTRACTS.md`](https://github.com/JCQuankey/qcheck/blob/main/docs/CONTRACTS.md).
 
 ## What v0 checks
 
