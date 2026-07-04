@@ -3,6 +3,25 @@
 All notable changes to qcheck (`qcheck-quantum` on PyPI). This project follows
 semantic versioning.
 
+## 0.8.0
+
+qcheck 0.8.0 adds a new review surface: **PennyLane**. The catalog grows to 46
+rules and now covers Qiskit, OpenQASM and PennyLane.
+
+### Added
+- **PennyLane static review** (four new rules, catalog now 46):
+  - `PENNYLANE-QML-MISSING-IMPORT` - `qml.*` used without importing pennylane.
+  - `PENNYLANE-DEVICE-ZERO-WIRES` - `qml.device(..., wires=0)`.
+  - `PENNYLANE-DEVICE-NEGATIVE-WIRES` - a negative device wires count.
+  - `PENNYLANE-QNODE-NO-RETURN` - a `@qml.qnode` function with no return.
+- Public PennyLane snippet cases in the regression suite.
+
+### Unchanged
+- `pip install qcheck-quantum`; the command and import package remain `qcheck`.
+- `qcheck verify` output, `--json` (single object and multi-file envelope),
+  `qcheck rules --json`, SARIF 2.1.0 and exit codes are backward compatible.
+- Zero runtime dependencies; qcheck reviews code without executing it.
+
 ## 0.7.0
 
 qcheck 0.7.0 improves CI usability and review coverage. The GitHub Action now
