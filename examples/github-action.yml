@@ -1,6 +1,6 @@
 # Example: review AI-generated quantum code in CI with qcheck.
 # Copy this into .github/workflows/qcheck.yml in your own repository.
-# This file is an EXAMPLE only — it does not run in the qcheck repo.
+# This file is an EXAMPLE only - it does not run in the qcheck repo.
 name: qcheck
 on: [pull_request, push]
 permissions:
