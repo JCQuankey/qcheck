@@ -3,6 +3,29 @@
 All notable changes to qcheck (`qcheck-quantum` on PyPI). This project follows
 semantic versioning.
 
+## 0.6.0
+
+qcheck 0.6.0 expands review coverage to 41 rules and strengthens regression
+testing. This release adds five static review rules for more common
+AI-generated Qiskit and OpenQASM mistakes, extends the deprecated-gate check to
+`u1`/`u2`/`u3`, and adds a public synthetic snippet suite.
+
+### Added
+- **Five new review rules** (catalog now 41):
+  - `QISKIT-NEGATIVE-QUBITS` - a circuit built with a negative qubit count.
+  - `QISKIT-ZERO-SIZED-REGISTER` - `QuantumRegister(0)`/`ClassicalRegister(0)`.
+  - `QISKIT-BIND-PARAMETERS-DEPRECATED` - `bind_parameters()` (use `assign_parameters()`).
+  - `QISKIT-SNAPSHOT-REMOVED` - `snapshot()` removed from Qiskit Aer.
+  - `QASM-DUPLICATE-INCLUDE` - the same include listed more than once.
+- **Wider deprecated-gate coverage**: `u1`/`u2`/`u3` are now flagged.
+- **Public synthetic snippet suite** for regression coverage across the catalog.
+
+### Unchanged
+- `pip install qcheck-quantum`; the command and import package remain `qcheck`.
+- `qcheck verify` output, `--json` (single object and multi-file envelope),
+  `qcheck rules --json`, SARIF 2.1.0 and exit codes are backward compatible.
+- Zero runtime dependencies; qcheck reviews code without executing it.
+
 ## 0.5.0
 
 qcheck 0.5.0 expands review coverage to 36 rules and improves day-to-day CI and
