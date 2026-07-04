@@ -2,7 +2,7 @@
 
 qcheck is published to PyPI as the distribution **`qcheck-quantum`** (the CLI
 command and import package are both `qcheck`). Publishing uses **PyPI OIDC
-Trusted Publishing** — there are **no API tokens** stored in GitHub.
+Trusted Publishing** - there are **no API tokens** stored in GitHub.
 
 ## Release model
 
@@ -18,16 +18,16 @@ never publish. Normal pushes never publish anything.
 
 This must be done in a browser and cannot be automated. Do TestPyPI first.
 
-1. **Create the GitHub Environments** (repo → Settings → Environments):
+1. **Create the GitHub Environments** (repo -> Settings -> Environments):
    `testpypi` and `pypi`. Optionally require a reviewer on `pypi`.
-2. **TestPyPI trusted publisher** (https://test.pypi.org → account → Publishing):
+2. **TestPyPI trusted publisher** (https://test.pypi.org -> account -> Publishing):
    add a *pending* publisher:
    - PyPI Project Name: `qcheck-quantum`
    - Owner: `JCQuankey`
    - Repository: `qcheck`
    - Workflow name: `release.yml`
    - Environment: `testpypi`
-3. **PyPI trusted publisher** (https://pypi.org → account → Publishing): same,
+3. **PyPI trusted publisher** (https://pypi.org -> account -> Publishing): same,
    with Environment `pypi`.
 4. Confirm the distribution name `qcheck-quantum` is still available on PyPI
    before the first live publish.
@@ -36,7 +36,7 @@ This must be done in a browser and cannot be automated. Do TestPyPI first.
 
 1. Bump `version` in `pyproject.toml` and `qcheck/__init__.py` (keep them equal).
 2. Open a PR, get CI green (`build.yml` builds + checks the artifact).
-3. **Dry run to TestPyPI:** Actions → *Release (PyPI Trusted Publishing)* →
+3. **Dry run to TestPyPI:** Actions -> *Release (PyPI Trusted Publishing)* ->
    Run workflow. Then `pip install -i https://test.pypi.org/simple/ qcheck-quantum`
    in a clean venv and smoke-test `qcheck --version` / `qcheck verify`.
 4. **Live:** publish a GitHub Release for the new version tag. The
