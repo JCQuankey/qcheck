@@ -94,6 +94,16 @@ qcheck ships a composite GitHub Action. In your repo's
     paths: "."     # or a folder, e.g. "circuits/"
 ```
 
+For paths containing spaces, pass one path per line:
+
+```yaml
+- uses: JCQuankey/qcheck@v0.6.0
+  with:
+    paths: |
+      my circuit.py
+      openqasm sample.qasm
+```
+
 The step fails the job when qcheck finds errors or unsafe code. See
 [`examples/github-action.yml`](https://github.com/JCQuankey/qcheck/blob/main/examples/github-action.yml).
 
