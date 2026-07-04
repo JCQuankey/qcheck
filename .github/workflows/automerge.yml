@@ -70,4 +70,23 @@ jobs:
           fi
 
           echo "All guards passed — enabling native auto-merge (squash)."
-          gh pr merge "$PR" --repo "$REPO" --auto --squash --delete-branch
+          # Duplicate label/synchronize events can race (two runs enabling auto-merge
+          # or one after the merge landed). Treat those as benign; still fail on real errors.
+          set +e
+          merge_out="$(gh pr merge "$PR" --repo "$REPO" --auto --squash --delete-branch 2>&1)"
+          merge_rc=$?
+          set -e
+          echo "$merge_out"
+          if [ "$merge_rc" -ne 0 ]; then
+            state="$(gh pr view "$PR" --repo "$REPO" --json state --jq .state 2>/dev/null || echo UNKNOWN)"
+            if [ "$state" = "MERGED" ]; then
+              echo "PR already merged — duplicate automerge event, treating as success."
+              exit 0
+            fi
+            if echo "$merge_out" | grep -qiE "already.*merge|merge already|already enabled|in progress|pull request is in (clean|unstable) status"; then
+              echo "Auto-merge already enabled / merge in progress — duplicate event, treating as success."
+              exit 0
+            fi
+            echo "Automerge failed for a non-idempotent reason (rc=$merge_rc)."
+            exit "$merge_rc"
+          fi
