@@ -14,9 +14,12 @@ Trusted Publishing** - there are **no API tokens** stored in GitHub.
 `build.yml` (runs on PRs) builds and `twine check`s the distribution but can
 never publish. Normal pushes never publish anything.
 
-## One-time setup (maintainer, before the first release)
+## One-time setup (maintainer)
 
-This must be done in a browser and cannot be automated. Do TestPyPI first.
+The TestPyPI and PyPI trusted publishers for `qcheck-quantum` are already
+configured and `0.2.0` shipped on 2026-07-04. The steps below are kept for
+reference / re-setup. They must be done in a browser and cannot be automated.
+Do TestPyPI first.
 
 1. **Create the GitHub Environments** (repo -> Settings -> Environments):
    `testpypi` and `pypi`. Optionally require a reviewer on `pypi`.
@@ -29,8 +32,8 @@ This must be done in a browser and cannot be automated. Do TestPyPI first.
    - Environment: `testpypi`
 3. **PyPI trusted publisher** (https://pypi.org -> account -> Publishing): same,
    with Environment `pypi`.
-4. Confirm the distribution name `qcheck-quantum` is still available on PyPI
-   before the first live publish.
+4. Confirm the distribution name `qcheck-quantum` on PyPI (already reserved by
+   the `0.2.0` release).
 
 ## Cutting a release
 

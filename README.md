@@ -28,21 +28,21 @@ milliseconds, statically.
 ## Install
 
 ```bash
-# From source (works today)
-git clone https://github.com/JCQuankey/qcheck && cd qcheck
-pip install -e ".[dev]"     # editable install + pytest
-```
-
-Once the first release is published, install from PyPI:
-
-```bash
-pip install qcheck-quantum   # available after the first PyPI release
+pip install qcheck-quantum
 ```
 
 The PyPI **distribution** name is `qcheck-quantum` (the bare `qcheck` name is
 taken on PyPI); the installed **command** and the import package are both
-`qcheck`. v0 has **zero runtime dependencies** (standard library only). Release
-process: [`docs/RELEASING.md`](https://github.com/JCQuankey/qcheck/blob/main/docs/RELEASING.md).
+`qcheck`. v0 has **zero runtime dependencies** (standard library only).
+
+To work on qcheck itself, install from source:
+
+```bash
+git clone https://github.com/JCQuankey/qcheck && cd qcheck
+pip install -e ".[dev]"     # editable install + pytest
+```
+
+Release process: [`docs/RELEASING.md`](https://github.com/JCQuankey/qcheck/blob/main/docs/RELEASING.md).
 
 ## Quickstart
 
@@ -89,7 +89,7 @@ qcheck ships a composite GitHub Action. In your repo's
 
 ```yaml
 - uses: actions/checkout@v4
-- uses: JCQuankey/qcheck@main
+- uses: JCQuankey/qcheck@v0.2.0
   with:
     paths: "."     # or a folder, e.g. "circuits/"
 ```
@@ -115,7 +115,7 @@ permissions:
   security-events: write
 steps:
   - uses: actions/checkout@v4
-  - uses: JCQuankey/qcheck@main
+  - uses: JCQuankey/qcheck@v0.2.0
     with:
       format: sarif
       output: qcheck.sarif
@@ -159,8 +159,8 @@ rest. For methodology and scope details, see the
 
 ## Roadmap
 
-- v0 (this): CLI, Qiskit + OpenQASM static checks, JSON, safety screen. **Zero runtime deps.**
-- v1: sandboxed simulation (opt-in), PennyLane + Cirq, LLM-powered fix suggestions, GitHub Action, MCP server (`verify_quantum_code`).
+- v0 (shipped, on PyPI): CLI, Qiskit + OpenQASM static checks, JSON + SARIF output, safety screen, GitHub Action. **Zero runtime deps.**
+- Next: PennyLane + Cirq, more rules with a documented rule catalog, LLM-powered fix suggestions, MCP server (`verify_quantum_code`), sandboxed simulation (opt-in).
 - Public **static-check leaderboard** for LLM-generated quantum code (see `leaderboard/`) + anonymized error dataset.
 
 ## Leaderboard
