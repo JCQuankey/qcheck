@@ -1,8 +1,8 @@
-# Which LLM writes correct quantum code?
+# qcheck static-check leaderboard — LLM-generated quantum code
 
-_Experimental qcheck static leaderboard. See [methodology](../methodology.md)._
+_Experimental static-check table (not a correctness ranking). See [methodology](../methodology.md)._
 
-**What this measures:** the qcheck *static* verdict (is the generated code well-formed, modern, safe, and likely to run?) on small Qiskit/OpenQASM tasks. **What it does NOT measure:** semantic/algorithmic correctness, quantum advantage, or hardware performance. Rows marked _SAMPLE_ are hand-written demos, not real model results.
+**Static checks only — this does not prove quantum correctness.** **What this measures:** the qcheck *static* pass rate (is the generated code well-formed, using modern APIs, safe, and likely to run?) on a small public Qiskit/OpenQASM task set. **What it does NOT measure:** semantic/algorithmic correctness, quantum advantage, hardware performance, or runtime success. This is a small, illustrative static-check benchmark, not a definitive model ranking. Rows marked _SAMPLE_ are hand-written demos, not real model results.
 
 | # | Model | Provider | Static pass rate | Passed / Attempted | Unsafe | qcheck |
 |---|-------|----------|------------------|--------------------|--------|--------|

@@ -84,23 +84,29 @@ execution vector (see Qiskit CVE-2025-2000 for the QPY/pickle precedent). See
 ## What qcheck is NOT
 
 Not a quantum framework. Not a QPU runner. Not an optimizer. It does one thing:
-tell you whether LLM-generated quantum code is well-formed, modern, safe, and
-likely to run.
+run static checks that tell you whether LLM-generated quantum code is well-formed,
+modern, safe, and likely to run.
+
+qcheck **does not prove mathematical or semantic correctness**, does not guarantee
+hardware execution, and **v0 does not execute untrusted Python submissions**. A
+snippet can pass qcheck's static checks and still be the wrong algorithm.
 
 ## Roadmap
 
 - v0 (this): CLI, Qiskit + OpenQASM static checks, JSON, safety screen. **Zero runtime deps.**
 - v1: sandboxed simulation (opt-in), PennyLane + Cirq, LLM-powered fix suggestions, GitHub Action, MCP server (`verify_quantum_code`).
-- Public **"Which LLM writes correct quantum code?"** leaderboard (see `leaderboard/`) + anonymized error dataset.
+- Public **static-check leaderboard** for LLM-generated quantum code (see `leaderboard/`) + anonymized error dataset.
 
 ## Leaderboard
 
-qcheck includes an experimental benchmark scaffold:
-**"Which LLM writes correct quantum code?"**
+qcheck includes an experimental **static-check leaderboard** for LLM-generated
+quantum snippets. It reports the qcheck static pass rate (pass/fail/unsafe) on a
+small public Qiskit/OpenQASM task set.
 
-It currently measures the static qcheck pass/fail/unsafe verdict on small
-Qiskit/OpenQASM tasks. It does **not** prove semantic correctness or hardware
-performance. The only results today are clearly-labelled SAMPLE demos.
+It is **static checks only** — it does **not** prove quantum/semantic
+correctness, does not guarantee hardware execution, and is **not** a definitive
+model ranking or a scientific benchmark. The only results today are clearly
+labelled **SAMPLE/demo** rows.
 
 - [`leaderboard/README.md`](leaderboard/README.md) — how to add a submission and run it
 - [`leaderboard/methodology.md`](leaderboard/methodology.md) — scope and limitations

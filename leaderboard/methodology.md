@@ -3,6 +3,18 @@
 This document is deliberately modest. The leaderboard is an MVP that measures a
 narrow, honest thing well, rather than a broad thing badly.
 
+## At a glance
+
+- **Metric:** `static_pass_rate` — the fraction of tasks whose output passes
+  qcheck's current static checks (runs-clean-on-modern-API).
+- **What it measures:** pass rate against qcheck static checks (well-formed, modern
+  APIs, declared registers, in-range indices, has a measurement, no unsafe constructs).
+- **What it does NOT measure:** mathematical/semantic correctness, algorithmic
+  optimality, hardware performance, runtime success, or formal verification.
+- **Current task set:** small, early, and subject to change.
+- **Current rows:** SAMPLE/demo unless explicitly marked real.
+- **Not** a definitive model ranking and **not** a scientific benchmark.
+
 ## Benchmark scope
 
 Each task asks a model to produce a small Qiskit or OpenQASM snippet. Each
