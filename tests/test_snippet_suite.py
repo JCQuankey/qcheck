@@ -1,7 +1,7 @@
 """Public synthetic snippet suite.
 
-Handcrafted, public snippets modelling common AI-generated Qiskit/OpenQASM
-mistakes (and clean baselines). Each case asserts the expected exit code and
+Handcrafted, public snippets modelling common AI-generated Qiskit, OpenQASM,
+PennyLane and Cirq mistakes (and clean baselines). Each case asserts the expected exit code and
 that the expected rule IDs fire, and that clean snippets stay clean. No private
 benchmark data, prompts, or model outputs are used.
 """
@@ -165,6 +165,29 @@ CASES = [
      "import pennylane as qml\ndev = qml.device('default.qubit', wires=2)\n"
      "@qml.qnode(dev)\ndef circ():\n    qml.Hadamard(wires=0)\n",
      EXIT_PASS, {"PENNYLANE-QNODE-NO-RETURN"}),  # warning only
+
+    # --- Cirq ---
+    ("clean_cirq_bell", "cq_bell.py",
+     "import cirq\nqubits = cirq.LineQubit.range(2)\n"
+     "circuit = cirq.Circuit()\ncircuit.append(cirq.H(qubits[0]))\n"
+     "circuit.append(cirq.CNOT(qubits[0], qubits[1]))\n"
+     "circuit.append(cirq.measure(*qubits, key='m'))\n",
+     EXIT_PASS, set()),
+    ("cirq_missing_import", "cq_noimp.py",
+     "qubits = cirq.LineQubit.range(2)\ncircuit = cirq.Circuit()\n",
+     EXIT_FAIL, {"CIRQ-MISSING-IMPORT"}),
+    ("cirq_measure_no_qubits", "cq_nomeas.py",
+     "import cirq\nq = cirq.LineQubit.range(2)\nm = cirq.measure()\n",
+     EXIT_FAIL, {"CIRQ-MEASURE-NO-QUBITS"}),
+    ("cirq_empty_linequbits", "cq_empty.py",
+     "import cirq\nqubits = cirq.LineQubit.range(0)\n",
+     EXIT_PASS, {"CIRQ-EMPTY-LINEQUBITS"}),  # warning only: legal Cirq
+    ("cirq_same_qubit_2q", "cq_same.py",
+     "import cirq\nq0 = cirq.LineQubit(0)\nop = cirq.CNOT(q0, q0)\n",
+     EXIT_PASS, {"CIRQ-SAME-QUBIT-2Q"}),  # warning only
+    ("cirq_aliased_import_clean", "cq_alias.py",
+     "import cirq as cq\nqs = cq.LineQubit.range(3)\n",
+     EXIT_PASS, set()),
 ]
 
 
