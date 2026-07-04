@@ -129,7 +129,7 @@ uses a synthetic `stdin` URI and is not meant for code-scanning upload.
 
 ## Rule catalog (explain your findings)
 
-qcheck ships **23 rules**, and every finding carries a **stable rule id** (for
+qcheck ships **30 rules**, and every finding carries a **stable rule id** (for
 example `QISKIT-REMOVED-IMPORT`). Each id is backed by catalog metadata - a
 title, category, default severity, a plain-language summary, why it matters, and
 a recommended next step - so a developer or an agent can act on a finding right
@@ -148,13 +148,16 @@ releases, which keeps CI gates and agent loops consistent as qcheck grows.
 
 ## What v0 checks
 
-**OpenQASM 2/3:** missing header, undeclared and duplicate registers,
-index-out-of-range, malformed measurements, missing measurement, OpenQASM 2/3
-syntax mismatches, unsupported includes, suspicious non-QASM content.
-**Qiskit Python:** Python syntax, missing `QuantumCircuit` import, missing
-measurement, `get_counts()` on an unmeasured circuit, and Qiskit-1.0 breaking
-changes LLMs still emit (`execute()`, `assemble()`,
-`from qiskit import Aer/execute`, deprecated gate aliases like `cnot`->`cx`).
+**OpenQASM 2/3:** missing header, undeclared, duplicate and zero-sized
+registers, index-out-of-range, malformed measurements, missing measurement,
+two-qubit gates on a single qubit, OpenQASM 2/3 syntax mismatches, unsupported
+includes, suspicious non-QASM content.
+**Qiskit Python:** Python syntax, missing `QuantumCircuit` import, zero-qubit
+circuits, qubit/classical-bit indices out of range, `measure()` with no
+classical bits, two-qubit gates on one qubit, missing measurement,
+`get_counts()` on an unmeasured circuit, and Qiskit-1.0 breaking changes LLMs
+still emit (`execute()`, `assemble()`, `from qiskit import Aer/execute`,
+deprecated gate aliases like `cnot`->`cx`).
 
 Run `qcheck rules` to see the full catalog with guidance for each rule.
 
