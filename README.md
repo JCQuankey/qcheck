@@ -124,9 +124,27 @@ steps:
       sarif_file: qcheck.sarif
 ```
 
-SARIF reports static qcheck findings (rule id, level, file, line) - it does not
-prove quantum correctness. `stdin` input uses a synthetic `stdin` URI and is not
-meant for code-scanning upload.
+SARIF reports static qcheck findings (rule id, level, file, line). `stdin` input
+uses a synthetic `stdin` URI and is not meant for code-scanning upload.
+
+## Rule catalog (explain your findings)
+
+Every qcheck finding carries a **stable rule id** (for example
+`QISKIT-REMOVED-IMPORT`). Each id is backed by catalog metadata - a title,
+category, default severity, a plain-language summary, why it matters, and a
+recommended next step - so a developer or an agent can act on a finding right
+away and triage faster.
+
+Browse the catalog from the CLI:
+
+```bash
+qcheck rules            # table: id, level, category, summary
+qcheck rules --json     # full metadata, for agents and CI
+```
+
+The same metadata enriches SARIF `driver.rules[]`, so code-scanning alerts show
+each rule's description, severity and guidance inline. Rule ids are stable across
+releases, which keeps CI gates and agent loops consistent as qcheck grows.
 
 ## What v0 checks
 
