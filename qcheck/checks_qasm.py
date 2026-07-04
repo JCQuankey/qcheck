@@ -212,6 +212,19 @@ def _check_measure(stmt, qregs, cregs, line, findings, fixes):
         _check_refs(stmt, qregs, cregs, line, findings, declared_required=True)
         return
 
+    # Whole-register measurement operands referencing undeclared registers
+    # (the bare-name form has no [index], so index-based checks miss it).
+    if "[" not in src and src and src not in qregs:
+        findings.append(Finding(
+            "QASM-MEASURE-SRC", "error",
+            f"Measurement source {src!r} is not a declared qubit register.",
+            line))
+    if "[" not in tgt and tgt and tgt not in cregs:
+        findings.append(Finding(
+            "QASM-MEASURE-TGT", "error",
+            f"Measurement target {tgt!r} is not a declared classical register.",
+            line))
+
     # Whole-register measurement with mismatched sizes (e.g. measure q -> c
     # where q has 3 qubits but c has 2 bits) broadcasts incorrectly.
     if "[" not in src and "[" not in tgt and src in qregs and tgt in cregs \

@@ -78,6 +78,11 @@ _RULES: List[Rule] = [
        "transpile() is called but never imported.",
        "The snippet raises NameError at runtime.",
        "Add 'from qiskit import transpile'."),
+    _r("QISKIT-PARAMETER-MISSING-IMPORT", "Parameter used without import", "structure",
+       "error", "qiskit",
+       "Parameter is used but never imported.",
+       "The snippet raises NameError at runtime.",
+       "Add 'from qiskit.circuit import Parameter'."),
     # --- Qiskit structure ---
     _r("QISKIT-MISSING-IMPORT", "QuantumCircuit used without import", "structure",
        "error", "qiskit",
