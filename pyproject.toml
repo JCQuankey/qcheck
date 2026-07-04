@@ -7,7 +7,7 @@ build-backend = "setuptools.build_meta"
 # validation library), so we publish as 'qcheck-quantum'. The CLI command and
 # import package both remain 'qcheck'.
 name = "qcheck-quantum"
-version = "0.6.0"
+version = "0.7.0"
 description = "Verify LLM-generated quantum code (Qiskit / OpenQASM) statically and safely."
 readme = "README.md"
 requires-python = ">=3.9"
