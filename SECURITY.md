@@ -46,8 +46,12 @@ deserialization). An agent calling a verifier in a loop would amplify this.
 
 ## Reporting a vulnerability
 
-Please report suspected vulnerabilities privately via a
-[GitHub security advisory](https://github.com/JCQuankey/qcheck/security/advisories/new)
-on this repository, or by opening a minimal issue that does **not** include
-exploit details. We aim to acknowledge reports within a few business days.
-Please do not disclose publicly until a fix is available.
+Please report suspected vulnerabilities **privately**:
+
+- Email **security@quankey.xyz**, or
+- Open a [GitHub security advisory](https://github.com/JCQuankey/qcheck/security/advisories/new) on this repository.
+
+Do **not** open a public issue for a sensitive vulnerability, and do not disclose
+publicly until a fix is available. Please do **not** include secrets, API keys, or
+private paths in your report — a minimal reproduction is enough. We aim to
+acknowledge reports within a few business days.
