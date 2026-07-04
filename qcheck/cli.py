@@ -102,17 +102,33 @@ def _print_human(report: Report, path: str) -> None:
 
 _LANG_EXT = {"qasm2": ".qasm", "qasm3": ".qasm", "qiskit": ".py", "python": ".py"}
 
+# Directories skipped during recursion: virtualenvs, VCS, caches, build output,
+# vendored deps. Without this, `qcheck verify .` in a repo with a .venv would
+# review thousands of third-party files (pip, etc.) and flag them as unsafe.
+# Explicit file/dir paths passed on the command line are never pruned.
+_SKIP_DIRS = frozenset({
+    ".git", ".hg", ".svn", ".venv", "venv", "env", "ENV", "virtualenv",
+    "node_modules", "__pycache__", ".tox", ".nox", ".mypy_cache",
+    ".pytest_cache", ".ruff_cache", "site-packages", "build", "dist",
+    ".eggs", ".idea", ".vscode",
+})
+
 
 def _expand_targets(paths: List[str]) -> List[str]:
     """Expand directories into their .py/.qasm files (recursive, sorted).
-    Keeps '-' (stdin) and explicit file paths. Deterministic order."""
+    Keeps '-' (stdin) and explicit file paths. Deterministic order.
+    Recursion skips vendored/build/VCS dirs (see _SKIP_DIRS); hidden dirs
+    (dot-prefixed) are skipped too, but an explicitly named dir still descends."""
     out: List[str] = []
     for p in paths:
         if p == "-":
             out.append("-")
         elif os.path.isdir(p):
             found = []
-            for root, _dirs, files in os.walk(p):
+            for root, dirs, files in os.walk(p):
+                # Prune in place (topdown walk): don't descend into vendor/hidden dirs.
+                dirs[:] = [d for d in dirs
+                           if d not in _SKIP_DIRS and not d.startswith(".")]
                 for fn in files:
                     if fn.endswith((".py", ".qasm")):
                         found.append(os.path.join(root, fn))

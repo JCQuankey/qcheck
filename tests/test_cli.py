@@ -85,3 +85,33 @@ def test_stdin_unsafe(monkeypatch):
     import io
     monkeypatch.setattr("sys.stdin", io.StringIO("import os\nos.system('x')\n"))
     assert main(["verify", "-", "--lang", "python"]) == EXIT_UNSAFE
+
+
+def test_recursion_skips_vendor_and_hidden_dirs(tmp_path, capsys):
+    # Two real files the user owns (so the aggregate envelope path is exercised)...
+    (tmp_path / "circuit.py").write_text(
+        "from qiskit import QuantumCircuit\n"
+        "qc = QuantumCircuit(1, 1)\nqc.measure(0, 0)\n")
+    (tmp_path / "bell.qasm").write_text(
+        'OPENQASM 2.0;\ninclude "qelib1.inc";\nqreg q[1];\ncreg c[1];\n'
+        "h q[0];\nmeasure q -> c;\n")
+    # ...and third-party/build/hidden dirs that must NOT be reviewed.
+    for d in (".venv/lib/site-packages", "node_modules", ".git"):
+        sub = tmp_path / d
+        sub.mkdir(parents=True)
+        (sub / "vendor.py").write_text("import os\nos.system('rm -rf /')\n")
+    rc = main(["verify", str(tmp_path), "--json"])
+    data = json.loads(capsys.readouterr().out)
+    reviewed = {r["path"] for r in data["results"]}
+    assert rc == EXIT_PASS                     # only the clean user file was seen
+    assert any("circuit.py" in p for p in reviewed)
+    assert not any("vendor.py" in p for p in reviewed)
+
+
+def test_explicit_file_inside_vendor_dir_still_reviewed(tmp_path):
+    # Pruning applies to *recursion*, not to an explicitly named path.
+    sub = tmp_path / ".venv"
+    sub.mkdir()
+    f = sub / "thing.py"
+    f.write_text("import os\nos.system('x')\n")
+    assert main(["verify", str(f)]) == EXIT_UNSAFE
