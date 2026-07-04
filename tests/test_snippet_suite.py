@@ -144,6 +144,27 @@ CASES = [
      'OPENQASM 2.0;\ninclude "qelib1.inc";\nqreg q[2];\ncreg c[2];\n'
      "h q[5];\nmeasure q -> c;\n",
      EXIT_FAIL, {"QASM-INDEX-RANGE"}),
+
+    # --- PennyLane ---
+    ("clean_pennylane", "pl_ok.py",
+     "import pennylane as qml\ndev = qml.device('default.qubit', wires=2)\n"
+     "@qml.qnode(dev)\ndef circ():\n    qml.Hadamard(wires=0)\n"
+     "    qml.CNOT(wires=[0, 1])\n    return qml.expval(qml.PauliZ(0))\n",
+     EXIT_PASS, set()),
+    ("pennylane_missing_import", "pl_imp.py",
+     "dev = qml.device('default.qubit', wires=2)\n"
+     "@qml.qnode(dev)\ndef circ():\n    return qml.expval(qml.PauliZ(0))\n",
+     EXIT_FAIL, {"PENNYLANE-QML-MISSING-IMPORT"}),
+    ("pennylane_zero_wires", "pl_zw.py",
+     "import pennylane as qml\ndev = qml.device('default.qubit', wires=0)\n",
+     EXIT_FAIL, {"PENNYLANE-DEVICE-ZERO-WIRES"}),
+    ("pennylane_negative_wires", "pl_nw.py",
+     "import pennylane as qml\ndev = qml.device('default.qubit', wires=-2)\n",
+     EXIT_FAIL, {"PENNYLANE-DEVICE-NEGATIVE-WIRES"}),
+    ("pennylane_qnode_no_return", "pl_nr.py",
+     "import pennylane as qml\ndev = qml.device('default.qubit', wires=2)\n"
+     "@qml.qnode(dev)\ndef circ():\n    qml.Hadamard(wires=0)\n",
+     EXIT_PASS, {"PENNYLANE-QNODE-NO-RETURN"}),  # warning only
 ]
 
 
