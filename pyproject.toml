@@ -8,13 +8,13 @@ build-backend = "setuptools.build_meta"
 # import package both remain 'qcheck'.
 name = "qcheck-quantum"
 version = "0.8.0"
-description = "Verify LLM-generated quantum code (Qiskit / OpenQASM) statically and safely."
+description = "Review LLM-generated quantum code (Qiskit / OpenQASM / PennyLane / Cirq) statically and safely."
 readme = "README.md"
 requires-python = ">=3.9"
 license = { text = "Apache-2.0" }
 authors = [{ name = "qcheck contributors" }]
 maintainers = [{ name = "JCQuankey", email = "dev@quankey.xyz" }]
-keywords = ["quantum", "qiskit", "openqasm", "llm", "linter", "code-review", "static-analysis", "sarif"]
+keywords = ["quantum", "qiskit", "openqasm", "pennylane", "cirq", "llm", "linter", "code-review", "static-analysis", "sarif"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",

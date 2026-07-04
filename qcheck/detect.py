@@ -5,7 +5,8 @@ import os
 
 
 def detect_framework(path: str, text: str) -> str:
-    """Return one of: qasm2, qasm3, qiskit, python_unknown, unknown."""
+    """Return one of: qasm2, qasm3, qiskit, pennylane, cirq,
+    python_unknown, unknown."""
     ext = os.path.splitext(path)[1].lower()
     low = text.lower()
 
@@ -21,10 +22,25 @@ def detect_framework(path: str, text: str) -> str:
         return "qasm2"
 
     if ext == ".py":
+        # Import evidence first: what a file imports beats what it merely
+        # mentions (a docstring saying "ported from Cirq" must not reroute a
+        # Qiskit file). Files importing several frameworks route to the first
+        # match below - qiskit before cirq, so interop code keeps the larger
+        # Qiskit rule set.
+        if "import pennylane" in low or "from pennylane" in low:
+            return "pennylane"
+        if "import qiskit" in low or "from qiskit" in low:
+            return "qiskit"
+        if "import cirq" in low or "from cirq" in low:
+            return "cirq"
+        # Mention fallback: catches snippets that forgot the import (the
+        # missing-import rules exist exactly for these).
         if "pennylane" in low or "qml." in low:
             return "pennylane"
         if "qiskit" in low or "quantumcircuit" in low:
             return "qiskit"
+        if "cirq." in low:
+            return "cirq"
         return "python_unknown"
 
     return "unknown"

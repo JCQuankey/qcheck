@@ -2,8 +2,8 @@
 
 **AI writes quantum code. qcheck reviews it.**
 
-`qcheck` is a lightweight review layer for AI-generated Qiskit, OpenQASM and
-PennyLane snippets. It catches common issues early - removed-in-1.0 APIs, unsafe patterns,
+`qcheck` is a lightweight review layer for AI-generated Qiskit, OpenQASM,
+PennyLane and Cirq snippets. It catches common issues early - removed-in-1.0 APIs, unsafe patterns,
 missing measurements, parse errors - so agents and developers can improve quantum
 code before it reaches humans, CI, or simulators. Tiny, dependency-free, and it
 reviews code without ever executing it.
@@ -139,7 +139,7 @@ uses a synthetic `stdin` URI and is not meant for code-scanning upload.
 
 ## Rule catalog (explain your findings)
 
-qcheck ships **46 rules**, and every finding carries a **stable rule id** (for
+qcheck ships **50 rules**, and every finding carries a **stable rule id** (for
 example `QISKIT-REMOVED-IMPORT`). Each id is backed by catalog metadata - a
 title, category, default severity, a plain-language summary, why it matters, and
 a recommended next step - so a developer or an agent can act on a finding right
@@ -175,6 +175,10 @@ deprecated gate aliases like `cnot`->`cx`).
 **PennyLane:** `qml` used without import, zero/negative device wires, and
 QNodes with no return.
 
+**Cirq:** `cirq` used without import, `cirq.measure()` with no qubits,
+two-qubit gates given the same qubit twice, and empty `LineQubit.range(...)`
+calls.
+
 Run `qcheck rules` to see the full catalog with guidance for each rule.
 
 ## Safety policy
@@ -201,7 +205,8 @@ rest. For methodology and scope details, see the
 ## Roadmap
 
 - v0 (shipped, on PyPI): CLI, Qiskit + OpenQASM static checks, JSON + SARIF output, safety screen, GitHub Action. **Zero runtime deps.**
-- Next: PennyLane + Cirq, more rules with a documented rule catalog, LLM-powered fix suggestions, MCP server (`verify_quantum_code`), sandboxed simulation (opt-in).
+- Shipped since: PennyLane + Cirq static review surfaces, a documented rule catalog (50 rules).
+- Next: more rules per surface, LLM-powered fix suggestions, MCP server (`verify_quantum_code`), sandboxed simulation (opt-in).
 - Public **static-check leaderboard** for LLM-generated quantum code (see `leaderboard/`) + anonymized error dataset.
 
 ## Leaderboard

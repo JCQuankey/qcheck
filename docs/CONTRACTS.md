@@ -54,7 +54,7 @@ outranks `0`).
 **Stable fields agents can rely on:**
 - `qcheck_version` - the version that produced the output.
 - `status` - one of `pass`, `warning`, `fail`.
-- `framework` - `qasm2`, `qasm3`, `qiskit`, `pennylane`, `python_unknown`, or `unknown`.
+- `framework` - `qasm2`, `qasm3`, `qiskit`, `pennylane`, `cirq`, `python_unknown`, or `unknown`.
 - `static_checks` - the full list of findings. Each finding has:
   - `id` - the stable rule ID (see the catalog).
   - `level` - `error`, `warning`, or `info`.
@@ -111,8 +111,10 @@ keeps existing single-file consumers working.
 ```
 
 Every rule provides: `id`, `title`, `category`, `default_level`, `applies_to`,
-`summary`, `why_it_matters`, `recommended_action`. Agents can use this catalog as
-a stable knowledge base of what qcheck reviews and how to act on each finding.
+`summary`, `why_it_matters`, `recommended_action`. `applies_to` names the review
+surface: `qiskit`, `openqasm`, `pennylane`, `cirq`, `python`, or `cli`. Agents
+can use this catalog as a stable knowledge base of what qcheck reviews and how
+to act on each finding.
 
 ## SARIF (GitHub Code Scanning)
 

@@ -17,7 +17,7 @@ VALID_LEVELS = ("error", "warning", "info")
 CATEGORIES = ("api-compatibility", "structure", "syntax", "safety", "input")
 
 # Which surface a rule applies to.
-SURFACES = ("qiskit", "openqasm", "python", "cli", "pennylane")
+SURFACES = ("qiskit", "openqasm", "python", "cli", "pennylane", "cirq")
 
 
 @dataclass(frozen=True)
@@ -176,6 +176,28 @@ _RULES: List[Rule] = [
        "A QNode must return a measurement, so a return-less QNode yields nothing useful.",
        "Return a measurement, for example 'return qml.expval(qml.PauliZ(0))'."),
 
+    # --- Cirq ---
+    _r("CIRQ-MISSING-IMPORT", "Cirq used without import", "structure",
+       "error", "cirq",
+       "cirq.* calls are used but cirq is never imported.",
+       "The snippet raises NameError at runtime.",
+       "Add 'import cirq'."),
+    _r("CIRQ-MEASURE-NO-QUBITS", "measure() with no qubits", "structure",
+       "error", "cirq",
+       "cirq.measure() is called with no qubits.",
+       "Cirq raises ValueError on an empty measurement, so the snippet fails at circuit build time.",
+       "Pass the qubits to measure, e.g. cirq.measure(*qubits, key='m')."),
+    _r("CIRQ-EMPTY-LINEQUBITS", "Empty LineQubit range", "structure",
+       "warning", "cirq",
+       "cirq.LineQubit.range(n) is called with a literal n <= 0.",
+       "The call is legal but yields an empty qubit list, so the circuit built from it has nothing to act on.",
+       "Request the number of qubits the circuit needs, e.g. cirq.LineQubit.range(2)."),
+    _r("CIRQ-SAME-QUBIT-2Q", "Two-qubit gate on one qubit", "structure",
+       "warning", "cirq",
+       "A two-qubit gate such as cirq.CNOT uses the same qubit as both operands.",
+       "Cirq raises 'Duplicate qids' at operation construction; repeating a qubit is almost always a typo.",
+       "Use two distinct qubits for the gate, e.g. cirq.CNOT(q0, q1)."),
+
     # --- OpenQASM structure ---
     _r("QASM-NO-HEADER", "OpenQASM header missing", "structure",
        "error", "openqasm",
@@ -276,9 +298,9 @@ _RULES: List[Rule] = [
     # --- CLI / input ---
     _r("UNSUPPORTED", "Unsupported input", "input",
        "error", "cli",
-       "The file is not OpenQASM or Qiskit Python.",
-       "qcheck v0 reviews OpenQASM 2/3 and Qiskit Python; other inputs are reported so nothing fails silently.",
-       "Point qcheck at a .qasm or Qiskit .py file."),
+       "The file is not OpenQASM, Qiskit, PennyLane or Cirq code.",
+       "qcheck v0 reviews OpenQASM 2/3 and Qiskit/PennyLane/Cirq Python; other inputs are reported so nothing fails silently.",
+       "Point qcheck at a .qasm file or a Qiskit/PennyLane/Cirq .py file."),
 ]
 
 RULES: Dict[str, Rule] = {r.id: r for r in _RULES}
