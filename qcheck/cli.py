@@ -197,7 +197,15 @@ def _worst_exit(units) -> int:
 def main(argv: Optional[List[str]] = None) -> int:
     parser = argparse.ArgumentParser(
         prog="qcheck",
-        description="Review LLM-generated quantum code (Qiskit / OpenQASM).")
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        description="Review LLM-generated quantum code (Qiskit / OpenQASM).",
+        epilog=(
+            "examples:\n"
+            "  qcheck verify circuit.py            review one file\n"
+            "  qcheck verify . --format sarif      review a repo, emit SARIF for CI\n"
+            "  cat snippet.py | qcheck verify -    review from stdin (for agents)\n"
+            "  qcheck rules                        list all checks and guidance\n\n"
+            "exit codes: 0 pass  1 findings  2 unsafe/unsupported  3 usage/internal"))
     parser.add_argument("--version", action="version",
                         version=f"qcheck {__version__}")
     sub = parser.add_subparsers(dest="command")
