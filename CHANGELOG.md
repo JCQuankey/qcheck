@@ -3,6 +3,34 @@
 All notable changes to qcheck (`qcheck-quantum` on PyPI). This project follows
 semantic versioning.
 
+## 0.5.0
+
+qcheck 0.5.0 expands review coverage to 36 rules and improves day-to-day CI and
+CLI usability. This release adds six static review rules for common AI-generated
+Qiskit and OpenQASM mistakes, hardens GitHub Action argument handling, improves
+CLI help, and adds more false-positive guard tests.
+
+### Added
+- **Six new review rules** (catalog now 36):
+  - `QISKIT-REMOVED-MODULE` - import of a subpackage removed from Qiskit.
+  - `QISKIT-DEPRECATED-PROVIDER-PATH` - the `qiskit.providers.aer` import path.
+  - `QISKIT-REGISTER-MISSING-IMPORT` - QuantumRegister/ClassicalRegister used unimported.
+  - `QISKIT-TRANSPILE-MISSING-IMPORT` - `transpile()` used unimported.
+  - `QASM-CLASSICAL-AS-QUBIT` - a classical register used where a qubit is expected.
+  - `QASM-MEASURE-SIZE-MISMATCH` - a whole-register measurement with mismatched sizes.
+- **More false-positive guard tests** so legitimate and teaching snippets stay quiet.
+
+### Improved
+- **GitHub Action**: arguments are assembled as an array; a SARIF `output` path
+  with spaces now works. Existing inputs and behavior are unchanged.
+- **CLI help**: `qcheck --help` now shows common commands and the exit-code meanings.
+
+### Unchanged
+- `pip install qcheck-quantum`; the command and import package remain `qcheck`.
+- `qcheck verify` output, `--json` (single object and multi-file envelope),
+  `qcheck rules --json`, SARIF 2.1.0 and exit codes are backward compatible.
+- Zero runtime dependencies; qcheck reviews code without executing it.
+
 ## 0.4.0
 
 qcheck 0.4.0 expands static review coverage with seven new circuit-integrity
