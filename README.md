@@ -91,6 +91,37 @@ qcheck ships a composite GitHub Action. In your repo's
 The step fails the job when qcheck finds errors or unsafe code. See
 [`examples/github-action.yml`](examples/github-action.yml).
 
+## SARIF output (GitHub Code Scanning)
+
+qcheck can emit SARIF 2.1.0 so findings show up as **code scanning alerts** on
+the Security tab and inline on pull requests, instead of only in the log:
+
+```bash
+qcheck verify . --format sarif --output qcheck.sarif
+```
+
+In a workflow, generate the SARIF and let the caller upload it (upload needs
+`security-events: write`, best granted by the consuming repo):
+
+```yaml
+permissions:
+  contents: read
+  security-events: write
+steps:
+  - uses: actions/checkout@v4
+  - uses: JCQuankey/qcheck@main
+    with:
+      format: sarif
+      output: qcheck.sarif
+  - uses: github/codeql-action/upload-sarif@v3
+    with:
+      sarif_file: qcheck.sarif
+```
+
+SARIF reports static qcheck findings (rule id, level, file, line) — it does not
+prove quantum correctness. `stdin` input uses a synthetic `stdin` URI and is not
+meant for code-scanning upload.
+
 ## What v0 checks
 
 **OpenQASM 2/3:** missing header, undeclared registers, index-out-of-range,

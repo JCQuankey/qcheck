@@ -21,6 +21,7 @@ from .report import Report
 from .checks_qasm import check_qasm
 from .checks_qiskit import check_qiskit
 from .safety import scan_python_safety
+from .sarif import build_sarif
 
 EXIT_PASS = 0
 EXIT_FAIL = 1
@@ -164,6 +165,18 @@ def _verify_one(display: str, lang: Optional[str], stdin_text: Optional[str]) ->
         return (display, None, f"internal error: {e}")
 
 
+def _worst_exit(units) -> int:
+    """Worst-case exit code across verified units (findings-based, not format)."""
+    worst = EXIT_PASS
+    for _display, report, err in units:
+        if err is not None:
+            worst = max(worst, EXIT_INTERNAL)
+            continue
+        rc = _exit_code(report)
+        worst = EXIT_UNSAFE if EXIT_UNSAFE in (worst, rc) else max(worst, rc)
+    return worst
+
+
 def main(argv: Optional[List[str]] = None) -> int:
     parser = argparse.ArgumentParser(
         prog="qcheck",
@@ -174,8 +187,15 @@ def main(argv: Optional[List[str]] = None) -> int:
     p_verify = sub.add_parser("verify", help="review .qasm/.py files, directories, or stdin")
     p_verify.add_argument("paths", nargs="+",
                           help="one or more files or directories, or '-' for stdin")
+    p_verify.add_argument("--format", choices=("human", "json", "sarif"),
+                          default=None,
+                          help="output format (default: human). 'sarif' emits "
+                               "SARIF 2.1.0 for GitHub Code Scanning.")
     p_verify.add_argument("--json", action="store_true",
-                          help="emit machine-readable JSON (for agents/CI)")
+                          help="alias for --format json (backwards compatible)")
+    p_verify.add_argument("--output", metavar="FILE",
+                          help="write SARIF output to FILE instead of stdout "
+                               "(used with --format sarif)")
     p_verify.add_argument("--lang", choices=sorted(_LANG_EXT),
                           help="force language for stdin input")
 
@@ -183,6 +203,16 @@ def main(argv: Optional[List[str]] = None) -> int:
     if args.command != "verify":
         parser.print_help()
         return EXIT_INTERNAL
+
+    # Resolve format. --format wins when given; --json is a backwards-compatible
+    # alias; default stays human. Exit codes never depend on the format.
+    if args.format is not None:
+        fmt = args.format
+    elif args.json:
+        fmt = "json"
+    else:
+        fmt = "human"
+    emit_json = fmt == "json"
 
     targets = _expand_targets(args.paths)
     if not targets:
@@ -192,13 +222,26 @@ def main(argv: Optional[List[str]] = None) -> int:
     stdin_text = sys.stdin.read() if "-" in targets else None
     units = [_verify_one(t, args.lang, stdin_text) for t in targets]
 
+    # SARIF: a single-run document over all units, regardless of count.
+    if fmt == "sarif":
+        doc = build_sarif(
+            [(d, r) for (d, r, e) in units if r is not None],
+            execution_successful=all(e is None for (_d, _r, e) in units))
+        text = json.dumps(doc, indent=2)
+        if args.output:
+            with open(args.output, "w", encoding="utf-8") as fh:
+                fh.write(text + "\n")
+        else:
+            print(text)
+        return _worst_exit(units)
+
     # Single unit -> preserve legacy output + exit code exactly.
     if len(units) == 1:
         display, report, err = units[0]
         if err is not None:
             print(f"qcheck: {err}", file=sys.stderr)
             return EXIT_INTERNAL
-        if args.json:
+        if emit_json:
             print(json.dumps(report.to_dict(), indent=2))
         else:
             _print_human(report, display)
@@ -212,7 +255,7 @@ def main(argv: Optional[List[str]] = None) -> int:
             err_count += 1
             worst = max(worst, EXIT_INTERNAL)
             results.append({"path": display, "error": err})
-            if not args.json:
+            if not emit_json:
                 print(f"  [ERROR] {display}: {err}")
             continue
         rc = _exit_code(report)
@@ -223,7 +266,7 @@ def main(argv: Optional[List[str]] = None) -> int:
             failed += 1
         else:
             passed += 1
-        if args.json:
+        if emit_json:
             d = report.to_dict()
             d["path"] = display
             results.append(d)
@@ -235,7 +278,7 @@ def main(argv: Optional[List[str]] = None) -> int:
 
     summary = {"files": len(units), "passed": passed, "failed": failed,
                "unsafe": unsafe, "read_errors": err_count}
-    if args.json:
+    if emit_json:
         print(json.dumps({"qcheck_version": __version__, "results": results,
                           "summary": summary}, indent=2))
     else:

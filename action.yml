@@ -8,6 +8,14 @@ inputs:
     description: "Files or directories to review (space-separated). Default: the whole repo."
     required: false
     default: "."
+  format:
+    description: "Output format: human (default) or sarif."
+    required: false
+    default: "human"
+  output:
+    description: "Write output to this file (used with format: sarif, e.g. qcheck.sarif)."
+    required: false
+    default: ""
   args:
     description: "Extra arguments for `qcheck verify` (e.g. --json)."
     required: false
@@ -27,5 +35,11 @@ runs:
       # Inputs are passed via env (never inlined into the shell) to avoid injection.
       env:
         QC_PATHS: ${{ inputs.paths }}
+        QC_FORMAT: ${{ inputs.format }}
+        QC_OUTPUT: ${{ inputs.output }}
         QC_ARGS: ${{ inputs.args }}
-      run: qcheck verify $QC_PATHS $QC_ARGS
+      run: |
+        fmt=""
+        [ -n "$QC_FORMAT" ] && fmt="--format $QC_FORMAT"
+        [ -n "$QC_OUTPUT" ] && fmt="$fmt --output $QC_OUTPUT"
+        qcheck verify $QC_PATHS $fmt $QC_ARGS
