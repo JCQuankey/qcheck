@@ -6,6 +6,12 @@ model-generated quantum code and reports a **static** pass/fail/unsafe verdict.
 > Status: MVP. The only results published today are hand-written **SAMPLE**
 > demos (see `submissions/sample/`). No real model has been run yet.
 
+## Hosted site
+
+Once GitHub Pages is enabled for this repo, the static leaderboard in
+`leaderboard/site/` is published at **https://jcquankey.github.io/qcheck/**.
+Until real model runs exist, the page shows only the SAMPLE/demo row.
+
 ## Why this exists
 
 LLMs generate quantum code that fails to run 40–70% of the time one-shot. This
