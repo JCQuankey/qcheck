@@ -1,13 +1,12 @@
-# qcheck static-check leaderboard — LLM-generated quantum code
+# qcheck static review benchmark
 
-A small **static-check benchmark** for LLM-generated quantum snippets. It runs
-[qcheck](../README.md) over model outputs and reports whether they pass qcheck's
-current **static** checks (pass/fail/unsafe).
+The qcheck benchmark tracks how AI-generated quantum snippets perform against
+qcheck's current static review checks. It's designed as an early quality signal
+for Qiskit and OpenQASM code produced by agents and LLM workflows.
 
-> **Static checks only.** This is **not** a proof of quantum correctness and
-> should **not** be treated as a definitive model ranking or a scientific
-> benchmark. The task set is small and early. The only results published today
-> are hand-written **SAMPLE/demo** rows — no real model has been run yet.
+The benchmark reports `static_pass_rate`: the share of submitted snippets that
+pass qcheck's current review checks. The current task set is intentionally small
+and focused on common review failures. Rows marked **SAMPLE** are demo data.
 
 ## Hosted site
 
@@ -32,12 +31,12 @@ The score is the **qcheck static verdict** on small Qiskit / OpenQASM tasks:
 - **unsafe** — the snippet touches the filesystem/network/process or uses
   dynamic exec; qcheck refuses it (exit code 2) and never runs it.
 
-## What the score does NOT mean
+## Scope
 
-It does **not** measure semantic/algorithmic correctness ("runs but produces the
-wrong distribution"), quantum advantage, mathematical correctness, or hardware
-performance. A snippet can pass the static verdict and still be the wrong
-algorithm. See [`methodology.md`](methodology.md).
+The score is an **early review signal** — it reflects avoidable code-quality
+failures (API usage, structure, safety), not a full evaluation of quantum
+algorithm quality. For the exact metric definition and scope, see
+[`methodology.md`](methodology.md).
 
 ## Layout
 

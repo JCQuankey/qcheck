@@ -1,12 +1,16 @@
 # qcheck
 
-**Catch broken LLM-generated quantum code before you run it.**
+**AI writes quantum code. qcheck reviews it.**
 
-LLMs write quantum code that fails to run **40–70% of the time** one-shot
-(QuanBench+ 2026: Qiskit 59.5% / PennyLane 42.9% pass; QCoder 2026: ~70%
-one-shot failure). `qcheck` is a tiny, dependency-free CLI that statically verifies
-LLM-generated **Qiskit** and **OpenQASM** snippets and tells you what's wrong —
-without ever executing the code.
+`qcheck` is a lightweight review layer for AI-generated Qiskit and OpenQASM
+snippets. It catches common issues early — removed-in-1.0 APIs, unsafe patterns,
+missing measurements, parse errors — so agents and developers can improve quantum
+code before it reaches humans, CI, or simulators. Tiny, dependency-free, and it
+reviews code without ever executing it.
+
+Why it matters: LLMs write quantum code that fails to run **40–70% of the time**
+one-shot (QuanBench+ 2026: Qiskit 59.5% / PennyLane 42.9% pass; QCoder 2026: ~70%
+one-shot failure). qcheck catches the avoidable share of that early.
 
 ```bash
 qcheck verify circuit.qasm
@@ -81,15 +85,16 @@ agent-facing verifier that *ran* untrusted model output would be a remote-code-
 execution vector (see Qiskit CVE-2025-2000 for the QPY/pickle precedent). See
 [`SECURITY.md`](SECURITY.md) for the full threat model.
 
-## What qcheck is NOT
+## Scope
 
-Not a quantum framework. Not a QPU runner. Not an optimizer. It does one thing:
-run static checks that tell you whether LLM-generated quantum code is well-formed,
-modern, safe, and likely to run.
+qcheck v0 focuses on static review signals for Qiskit and OpenQASM: API usage
+(including Qiskit 1.0 removals), unsafe patterns, missing measurements, parse
+issues, and common LLM-generated mistakes. It reviews code without executing it,
+so it's safe to run on untrusted model output inside an agent loop or CI.
 
-qcheck **does not prove mathematical or semantic correctness**, does not guarantee
-hardware execution, and **v0 does not execute untrusted Python submissions**. A
-snippet can pass qcheck's static checks and still be the wrong algorithm.
+It's a fast first-pass reviewer — pair it with your tests and simulators for the
+rest. For methodology and scope details, see the
+[leaderboard methodology](leaderboard/methodology.md).
 
 ## Roadmap
 
@@ -99,17 +104,13 @@ snippet can pass qcheck's static checks and still be the wrong algorithm.
 
 ## Leaderboard
 
-qcheck includes an experimental **static-check leaderboard** for LLM-generated
-quantum snippets. It reports the qcheck static pass rate (pass/fail/unsafe) on a
-small public Qiskit/OpenQASM task set.
-
-It is **static checks only** — it does **not** prove quantum/semantic
-correctness, does not guarantee hardware execution, and is **not** a definitive
-model ranking or a scientific benchmark. The only results today are clearly
-labelled **SAMPLE/demo** rows.
+qcheck includes a **static review benchmark** for AI-generated quantum code: it
+tracks how often model outputs pass qcheck's current review checks
+(`static_pass_rate`) on a small public Qiskit/OpenQASM task set — an early quality
+signal for agents and LLM workflows. The rows shown today are labelled **SAMPLE/demo**.
 
 - [`leaderboard/README.md`](leaderboard/README.md) — how to add a submission and run it
-- [`leaderboard/methodology.md`](leaderboard/methodology.md) — scope and limitations
+- [`leaderboard/methodology.md`](leaderboard/methodology.md) — scope and methodology
 - [`leaderboard/site/leaderboard.md`](leaderboard/site/leaderboard.md) — the generated table
 
 ## Contributing
@@ -123,8 +124,8 @@ makes qcheck sharper and feeds the public error taxonomy.
 - Technical questions / maintainer contact: **dev@quankey.xyz**
 - Security issues: **security@quankey.xyz** (see [`SECURITY.md`](SECURITY.md))
 
-Maintained by JCQuankey / qcheck contributors. qcheck runs locally, has no remote
-telemetry, and does not execute untrusted Python in v0.
+Maintained by JCQuankey / qcheck contributors. qcheck runs locally, sends no
+telemetry, and reviews code without executing it.
 
 ## License
 
