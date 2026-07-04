@@ -74,6 +74,76 @@ CASES = [
      'OPENQASM 2.0;\ninclude "qelib1.inc";\nqreg q[3];\ncreg c[2];\n'
      "h q[0];\nmeasure q -> c;\n",
      EXIT_PASS, {"QASM-MEASURE-SIZE-MISMATCH"}),  # warning only -> exit 0
+
+    # --- more clean baselines ---
+    ("clean_qiskit_measure_all", "measall.py",
+     "from qiskit import QuantumCircuit\nqc = QuantumCircuit(2, 2)\n"
+     "qc.h(0)\nqc.cx(0, 1)\nqc.measure_all()\n",
+     EXIT_PASS, set()),
+    ("clean_qiskit_registers", "regs.py",
+     "from qiskit import QuantumCircuit, QuantumRegister, ClassicalRegister\n"
+     "qr = QuantumRegister(2)\ncr = ClassicalRegister(2)\n"
+     "qc = QuantumCircuit(qr, cr)\nqc.h(0)\nqc.measure(qr, cr)\n",
+     EXIT_PASS, set()),
+    ("clean_qasm3_bell", "bell3.qasm",
+     'OPENQASM 3.0;\ninclude "stdgates.inc";\nqubit[2] q;\nbit[2] c;\n'
+     "h q[0];\ncx q[0], q[1];\nc = measure q;\n",
+     EXIT_PASS, set()),
+
+    # --- Qiskit: pack 3 & 4 & coverage ---
+    ("qiskit_get_counts_no_measure", "gc.py",
+     "from qiskit import QuantumCircuit\nqc = QuantumCircuit(2, 2)\nqc.h(0)\n"
+     "counts = result.get_counts(qc)\n",
+     EXIT_PASS, {"QISKIT-GET-COUNTS-NO-MEASURE"}),  # warnings only
+    ("qiskit_removed_provider_path", "prov.py",
+     "from qiskit.providers.aer import AerSimulator\n",
+     EXIT_PASS, {"QISKIT-DEPRECATED-PROVIDER-PATH"}),  # warning only
+    ("qiskit_transpile_missing_import", "trans.py",
+     "from qiskit import QuantumCircuit\nqc = QuantumCircuit(2, 2)\n"
+     "qc.measure_all()\nt = transpile(qc)\n",
+     EXIT_FAIL, {"QISKIT-TRANSPILE-MISSING-IMPORT"}),
+    ("qiskit_negative_qubits", "neg.py",
+     "from qiskit import QuantumCircuit\nqc = QuantumCircuit(-1)\n",
+     EXIT_FAIL, {"QISKIT-NEGATIVE-QUBITS"}),
+    ("qiskit_zero_sized_register", "zreg.py",
+     "from qiskit import QuantumCircuit, QuantumRegister\n"
+     "qr = QuantumRegister(0)\nqc = QuantumCircuit(qr)\n",
+     EXIT_FAIL, {"QISKIT-ZERO-SIZED-REGISTER"}),
+    ("qiskit_bind_parameters", "bind.py",
+     "from qiskit import QuantumCircuit\nqc = QuantumCircuit(1, 1)\n"
+     "qc.measure_all()\nqc2 = qc.bind_parameters({})\n",
+     EXIT_PASS, {"QISKIT-BIND-PARAMETERS-DEPRECATED"}),  # warning only
+    ("qiskit_parameter_missing_import", "param.py",
+     "from qiskit import QuantumCircuit\nqc = QuantumCircuit(1, 1)\n"
+     "qc.rx(Parameter('t'), 0)\nqc.measure_all()\n",
+     EXIT_FAIL, {"QISKIT-PARAMETER-MISSING-IMPORT"}),
+    ("qiskit_tools_removed", "tools.py",
+     "from qiskit.tools import job_monitor\n",
+     EXIT_FAIL, {"QISKIT-REMOVED-MODULE"}),
+
+    # --- OpenQASM: pack 3 & 4 & coverage ---
+    ("qasm_version_mismatch", "vmix.qasm",
+     'OPENQASM 2.0;\ninclude "qelib1.inc";\nqubit[2] q;\nbit[2] c;\n',
+     EXIT_PASS, {"QASM-VERSION-MISMATCH"}),  # warning only
+    ("qasm_no_measure", "nomeas.qasm",
+     'OPENQASM 2.0;\ninclude "qelib1.inc";\nqreg q[2];\ncreg c[2];\n'
+     "h q[0];\ncx q[0],q[1];\n",
+     EXIT_PASS, {"QASM-NO-MEASURE"}),  # warning only
+    ("qasm_zero_register", "zeroreg.qasm",
+     'OPENQASM 2.0;\ninclude "qelib1.inc";\nqreg q[0];\ncreg c[2];\n'
+     "measure q -> c;\n",
+     EXIT_FAIL, {"QASM-ZERO-REGISTER"}),
+    ("qasm_duplicate_include", "dupinc.qasm",
+     'OPENQASM 2.0;\ninclude "qelib1.inc";\ninclude "qelib1.inc";\n'
+     "qreg q[2];\ncreg c[2];\nmeasure q -> c;\n",
+     EXIT_PASS, {"QASM-DUPLICATE-INCLUDE"}),  # warning only
+    ("qasm_bare_measure_undeclared_target", "baretgt.qasm",
+     'OPENQASM 2.0;\ninclude "qelib1.inc";\nqreg q[2];\nh q[0];\nmeasure q -> c;\n',
+     EXIT_FAIL, {"QASM-MEASURE-TGT"}),
+    ("qasm_index_range", "idx.qasm",
+     'OPENQASM 2.0;\ninclude "qelib1.inc";\nqreg q[2];\ncreg c[2];\n'
+     "h q[5];\nmeasure q -> c;\n",
+     EXIT_FAIL, {"QASM-INDEX-RANGE"}),
 ]
 
 
