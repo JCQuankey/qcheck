@@ -29,7 +29,7 @@ _NEEDS_IMPORT = {
 }
 _DEPRECATED_METHODS = {
     "cnot": "cx", "toffoli": "ccx", "fredkin": "cswap", "iden": "id",
-    "mct": "mcx",
+    "mct": "mcx", "u1": "p", "u2": "u", "u3": "u",
 }
 
 
@@ -106,6 +106,12 @@ def check_qiskit(text: str) -> Tuple[bool, bool, List[Finding], List[str]]:
                 if func.id in _NEEDS_IMPORT:
                     needed.setdefault(func.id, (_NEEDS_IMPORT[func.id],
                                                 getattr(node, "lineno", None)))
+                if func.id in ("QuantumRegister", "ClassicalRegister") \
+                        and node.args and _int_const(node.args[0]) == 0:
+                    findings.append(Finding(
+                        "QISKIT-ZERO-SIZED-REGISTER", "error",
+                        f"{func.id}(0) has no bits; size it for the bits it "
+                        f"needs.", getattr(node, "lineno", None)))
                 if func.id == "QuantumCircuit":
                     uses_quantumcircuit = True
                 elif func.id == "execute":
@@ -127,6 +133,19 @@ def check_qiskit(text: str) -> Tuple[bool, bool, List[Finding], List[str]]:
                     has_measure = True
                 elif func.attr == "get_counts":
                     get_counts_line = getattr(node, "lineno", None)
+                elif func.attr == "bind_parameters":
+                    findings.append(Finding(
+                        "QISKIT-BIND-PARAMETERS-DEPRECATED", "warning",
+                        "bind_parameters() is deprecated; use "
+                        "assign_parameters().", getattr(node, "lineno", None)))
+                    fixes.append("Replace .bind_parameters() with "
+                                 ".assign_parameters().")
+                elif func.attr == "snapshot":
+                    findings.append(Finding(
+                        "QISKIT-SNAPSHOT-REMOVED", "warning",
+                        "snapshot() was removed from Qiskit Aer; use a Save "
+                        "instruction (e.g. save_statevector) instead.",
+                        getattr(node, "lineno", None)))
                 elif func.attr in _DEPRECATED_METHODS:
                     repl = _DEPRECATED_METHODS[func.attr]
                     findings.append(Finding(
@@ -175,10 +194,15 @@ def check_qiskit(text: str) -> Tuple[bool, bool, List[Finding], List[str]]:
 
 
 def _int_const(node):
-    """Return the int value of a constant AST node, else None."""
+    """Return the int value of a constant AST node (incl. -literal), else None."""
     if isinstance(node, ast.Constant) and isinstance(node.value, int) \
             and not isinstance(node.value, bool):
         return node.value
+    if isinstance(node, ast.UnaryOp) and isinstance(node.op, ast.USub) \
+            and isinstance(node.operand, ast.Constant) \
+            and isinstance(node.operand.value, int) \
+            and not isinstance(node.operand.value, bool):
+        return -node.operand.value
     return None
 
 
@@ -195,10 +219,16 @@ def _check_circuit_sizes(tree) -> List[Finding]:
         # Zero-qubit circuit, wherever it appears.
         if isinstance(node, ast.Call) and isinstance(node.func, ast.Name) \
                 and node.func.id == "QuantumCircuit":
-            if node.args and _int_const(node.args[0]) == 0:
+            v0 = _int_const(node.args[0]) if node.args else None
+            if v0 == 0:
                 out.append(Finding(
                     "QISKIT-ZERO-QUBITS", "error",
                     "QuantumCircuit(0) has no qubits; it cannot hold a circuit.",
+                    getattr(node, "lineno", None)))
+            elif v0 is not None and v0 < 0:
+                out.append(Finding(
+                    "QISKIT-NEGATIVE-QUBITS", "error",
+                    f"QuantumCircuit({v0}) has a negative qubit count.",
                     getattr(node, "lineno", None)))
         # Track `var = QuantumCircuit(<int>[, <int>])`.
         if isinstance(node, ast.Assign) and len(node.targets) == 1 \
