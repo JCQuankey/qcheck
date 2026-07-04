@@ -31,6 +31,16 @@ def check_qasm(text: str, framework: str) -> Tuple[bool, List[Finding], List[str
     qregs: dict[str, int] = {}
     cregs: dict[str, int] = {}
     header_seen = False
+    saw_measure = False
+    saw_gate = False
+
+    def _dup(name: str, line: int) -> bool:
+        if name in qregs or name in cregs:
+            findings.append(Finding(
+                "QASM-DUP-REGISTER", "error",
+                f"Register {name!r} is declared more than once.", line))
+            return True
+        return False
 
     for i, raw in enumerate(text.split("\n"), start=1):
         line = raw.split("//", 1)[0].strip()
@@ -72,18 +82,34 @@ def check_qasm(text: str, framework: str) -> Tuple[bool, List[Finding], List[str
 
         m = _QREG2.match(stmt)
         if m:
+            _dup(m.group(1), i)
             qregs[m.group(1)] = int(m.group(2))
             continue
         m = _CREG2.match(stmt)
         if m:
+            _dup(m.group(1), i)
             cregs[m.group(1)] = int(m.group(2))
             continue
         m = _QUBIT3.match(stmt)
         if m:
+            if framework == "qasm2":
+                findings.append(Finding(
+                    "QASM-VERSION-MISMATCH", "warning",
+                    "OpenQASM 3 declaration syntax ('qubit[n] name') in an "
+                    "OpenQASM 2 program; use 'qreg name[n];' or switch the "
+                    "header to 'OPENQASM 3.0;'.", i))
+            _dup(m.group(2), i)
             qregs[m.group(2)] = int(m.group(1))
             continue
         m = _BIT3.match(stmt)
         if m:
+            if framework == "qasm2":
+                findings.append(Finding(
+                    "QASM-VERSION-MISMATCH", "warning",
+                    "OpenQASM 3 declaration syntax ('bit[n] name') in an "
+                    "OpenQASM 2 program; use 'creg name[n];' or switch the "
+                    "header to 'OPENQASM 3.0;'.", i))
+            _dup(m.group(2), i)
             cregs[m.group(2)] = int(m.group(1))
             continue
 
@@ -92,10 +118,12 @@ def check_qasm(text: str, framework: str) -> Tuple[bool, List[Finding], List[str
 
         # measurement
         if "measure" in low:
+            saw_measure = True
             _check_measure(stmt, qregs, cregs, i, findings, fixes)
             continue
 
         # generic gate application: validate every indexed register reference
+        saw_gate = True
         _check_refs(stmt, qregs, cregs, i, findings, declared_required=True)
 
     if framework == "qasm2" and not header_seen:
@@ -103,6 +131,14 @@ def check_qasm(text: str, framework: str) -> Tuple[bool, List[Finding], List[str
             "QASM-NO-HEADER", "error",
             "Missing 'OPENQASM 2.0;' header.", 1))
         fixes.append("Add 'OPENQASM 2.0;' as the first line.")
+
+    # Gates applied but nothing measured: sampling returns no classical result.
+    if qregs and saw_gate and not saw_measure:
+        findings.append(Finding(
+            "QASM-NO-MEASURE", "warning",
+            "Circuit applies gates but never measures; running it returns no "
+            "classical result.", None))
+        fixes.append("Add a measurement (e.g. 'measure q -> c;').")
 
     syntax_valid = not any(f.id in ("QASM-SUSPICIOUS",) for f in findings)
     return syntax_valid, findings, fixes

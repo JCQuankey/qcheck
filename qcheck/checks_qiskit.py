@@ -12,7 +12,7 @@ from typing import List, Tuple
 from .report import Finding
 from .safety import scan_python_safety
 
-_REMOVED_FROM_QISKIT = {"execute", "Aer", "IBMQ", "BasicAer"}
+_REMOVED_FROM_QISKIT = {"execute", "Aer", "IBMQ", "BasicAer", "assemble"}
 _DEPRECATED_METHODS = {
     "cnot": "cx", "toffoli": "ccx", "fredkin": "cswap", "iden": "id",
     "mct": "mcx",
@@ -42,6 +42,7 @@ def check_qiskit(text: str) -> Tuple[bool, bool, List[Finding], List[str]]:
     module_imports: set[str] = set()
     uses_quantumcircuit = False
     has_measure = False
+    get_counts_line = None
 
     for node in ast.walk(tree):
         if isinstance(node, ast.ImportFrom):
@@ -74,9 +75,19 @@ def check_qiskit(text: str) -> Tuple[bool, bool, List[Finding], List[str]]:
                         "execute() was removed in Qiskit 1.0; use Sampler/"
                         "Estimator primitives or backend.run().",
                         getattr(node, "lineno", None)))
+                elif func.id == "assemble":
+                    findings.append(Finding(
+                        "QISKIT-ASSEMBLE-REMOVED", "error",
+                        "assemble() was removed in Qiskit 1.0; primitives "
+                        "(Sampler/Estimator) or backend.run() take circuits "
+                        "directly.", getattr(node, "lineno", None)))
+                    fixes.append("Remove assemble(); pass circuits straight to "
+                                 "a primitive or backend.run().")
             elif isinstance(func, ast.Attribute):
                 if func.attr in ("measure", "measure_all", "measure_active"):
                     has_measure = True
+                elif func.attr == "get_counts":
+                    get_counts_line = getattr(node, "lineno", None)
                 elif func.attr in _DEPRECATED_METHODS:
                     repl = _DEPRECATED_METHODS[func.attr]
                     findings.append(Finding(
@@ -98,6 +109,14 @@ def check_qiskit(text: str) -> Tuple[bool, bool, List[Finding], List[str]]:
             "Circuit has no measurement; sampling it returns nothing useful.",
             None))
         fixes.append("Add qc.measure_all() (or explicit measure) before running.")
+
+    if get_counts_line is not None and not has_measure:
+        findings.append(Finding(
+            "QISKIT-GET-COUNTS-NO-MEASURE", "warning",
+            "get_counts() is called but the circuit is never measured; counts "
+            "will be empty or meaningless.", get_counts_line))
+        fixes.append("Measure the circuit (qc.measure_all()) before reading "
+                     "get_counts().")
 
     if not uses_quantumcircuit:
         findings.append(Finding(
