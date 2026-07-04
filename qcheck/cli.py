@@ -21,6 +21,7 @@ from .report import Report
 from .checks_qasm import check_qasm
 from .checks_qiskit import check_qiskit
 from .checks_pennylane import check_pennylane
+from .checks_cirq import check_cirq
 from .safety import scan_python_safety
 from .sarif import build_sarif
 from . import rules as rule_catalog
@@ -46,6 +47,11 @@ def verify_text(path: str, text: str) -> Report:
 
     if framework == "pennylane":
         syntax_valid, unsafe, findings, fixes = check_pennylane(text)
+        return Report(framework=framework, syntax_valid=syntax_valid,
+                      findings=findings, suggested_fixes=fixes, unsafe=unsafe)
+
+    if framework == "cirq":
+        syntax_valid, unsafe, findings, fixes = check_cirq(text)
         return Report(framework=framework, syntax_valid=syntax_valid,
                       findings=findings, suggested_fixes=fixes, unsafe=unsafe)
 
@@ -79,7 +85,7 @@ def _unsupported_finding(framework):
     return Finding(
         "UNSUPPORTED", "error",
         f"Framework '{framework}' is not supported in qcheck v0 "
-        f"(supported: OpenQASM 2/3, Qiskit Python).", None)
+        f"(supported: OpenQASM 2/3, Qiskit, PennyLane and Cirq Python).", None)
 
 
 def _exit_code(report: Report) -> int:
@@ -204,7 +210,8 @@ def main(argv: Optional[List[str]] = None) -> int:
     parser = argparse.ArgumentParser(
         prog="qcheck",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        description="Review LLM-generated quantum code (Qiskit / OpenQASM).",
+        description="Review LLM-generated quantum code "
+                    "(Qiskit / OpenQASM / PennyLane / Cirq).",
         epilog=(
             "examples:\n"
             "  qcheck verify circuit.py            review one file\n"
