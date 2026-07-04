@@ -157,7 +157,7 @@ each rule's description, severity and guidance inline. Rule ids are stable acros
 releases, which keeps CI gates and agent loops consistent as qcheck grows.
 
 qcheck's JSON, `qcheck rules --json`, SARIF and exit codes are documented as
-stable output contracts for agents and CI in [`docs/CONTRACTS.md`](https://github.com/JCQuankey/qcheck/blob/main/docs/CONTRACTS.md).
+stable output contracts for agents and CI in [`docs/CONTRACTS.md`](https://github.com/JCQuankey/qcheck/blob/main/docs/CONTRACTS.md). For agent/CI consumption examples, see [`docs/AGENTS.md`](https://github.com/JCQuankey/qcheck/blob/main/docs/AGENTS.md).
 
 ## What v0 checks
 
