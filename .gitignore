@@ -52,3 +52,6 @@ docs/plan/
 
 # NOTE: fixtures/, tests/, examples/, and leaderboard/ (including sample_results.json)
 # are part of the repo and are intentionally NOT ignored.
+
+# Local private inputs (e.g. brand source docs); never published
+inputs/

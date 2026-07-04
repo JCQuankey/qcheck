@@ -1,6 +1,6 @@
 """SARIF 2.1.0 formatter for qcheck results (GitHub Code Scanning compatible).
 
-Pure formatter over Report objects — no execution, no new dependencies, and it
+Pure formatter over Report objects - no execution, no new dependencies, and it
 does not touch the human or --json output. SARIF reports static qcheck findings;
 it does not assert quantum correctness. Output ordering is deterministic.
 """

@@ -282,7 +282,7 @@ def main(argv: Optional[List[str]] = None) -> int:
         print(json.dumps({"qcheck_version": __version__, "results": results,
                           "summary": summary}, indent=2))
     else:
-        print(f"qcheck {__version__}: {summary['files']} file(s) — "
+        print(f"qcheck {__version__}: {summary['files']} file(s) - "
               f"{passed} passed, {failed} failed, {unsafe} unsafe"
               + (f", {err_count} unreadable" if err_count else ""))
     return worst

@@ -3,12 +3,12 @@
 **AI writes quantum code. qcheck reviews it.**
 
 `qcheck` is a lightweight review layer for AI-generated Qiskit and OpenQASM
-snippets. It catches common issues early — removed-in-1.0 APIs, unsafe patterns,
-missing measurements, parse errors — so agents and developers can improve quantum
+snippets. It catches common issues early - removed-in-1.0 APIs, unsafe patterns,
+missing measurements, parse errors - so agents and developers can improve quantum
 code before it reaches humans, CI, or simulators. Tiny, dependency-free, and it
 reviews code without ever executing it.
 
-Why it matters: LLMs write quantum code that fails to run **40–70% of the time**
+Why it matters: LLMs write quantum code that fails to run **40-70% of the time**
 one-shot (QuanBench+ 2026: Qiskit 59.5% / PennyLane 42.9% pass; QCoder 2026: ~70%
 one-shot failure). qcheck catches the avoidable share of that early.
 
@@ -21,7 +21,7 @@ qcheck verify snippet.py --json
 
 An LLM agent (or a developer pasting from a chat assistant) produces a Qiskit/QASM snippet.
 Will it run? Is it using an API that was removed in Qiskit 1.0? Does it measure?
-Is it even safe to touch? Today you find out by running it — wasting time, and
+Is it even safe to touch? Today you find out by running it - wasting time, and
 in an agent loop, running untrusted model output. `qcheck` answers in
 milliseconds, statically.
 
@@ -65,7 +65,7 @@ qcheck 0.2.0  [FAIL]  examples/broken_qiskit_execute.py  (qiskit)
 Reviewing multiple files prints a per-file summary and exits with the worst
 result found (unsafe > failed > passed). Directory recursion skips virtualenvs,
 VCS, caches, and build output (`.venv`, `node_modules`, `.git`, `site-packages`,
-`build`, `dist`, …) so it reviews your code, not your dependencies. To review a
+`build`, `dist`, ...) so it reviews your code, not your dependencies. To review a
 file inside one of those, pass it explicitly.
 
 ## JSON output (for agents & CI)
@@ -124,7 +124,7 @@ steps:
       sarif_file: qcheck.sarif
 ```
 
-SARIF reports static qcheck findings (rule id, level, file, line) — it does not
+SARIF reports static qcheck findings (rule id, level, file, line) - it does not
 prove quantum correctness. `stdin` input uses a synthetic `stdin` URI and is not
 meant for code-scanning upload.
 
@@ -134,13 +134,13 @@ meant for code-scanning upload.
 malformed measurements, unsupported includes, suspicious non-QASM content.
 **Qiskit Python:** Python syntax, missing `QuantumCircuit` import, missing
 measurement, and Qiskit-1.0 breaking changes LLMs still emit (`execute()`,
-`from qiskit import Aer/execute`, deprecated gate aliases like `cnot`→`cx`).
+`from qiskit import Aer/execute`, deprecated gate aliases like `cnot`->`cx`).
 
 ## Safety policy
 
 `qcheck` **never executes the input.** Qiskit snippets are analyzed with the
 Python `ast` module (parse, don't run). Any filesystem/network/process/dynamic-
-exec construct (`os`, `subprocess`, `eval`, `open`, …) marks the snippet
+exec construct (`os`, `subprocess`, `eval`, `open`, ...) marks the snippet
 **unsafe** and exits `2`. QASM input is text-scanned. This is deliberate: an
 agent-facing verifier that *ran* untrusted model output would be a remote-code-
 execution vector (see Qiskit CVE-2025-2000 for the QPY/pickle precedent). See
@@ -153,7 +153,7 @@ qcheck v0 focuses on static review signals for Qiskit and OpenQASM: API usage
 issues, and common LLM-generated mistakes. It reviews code without executing it,
 so it's safe to run on untrusted model output inside an agent loop or CI.
 
-It's a fast first-pass reviewer — pair it with your tests and simulators for the
+It's a fast first-pass reviewer - pair it with your tests and simulators for the
 rest. For methodology and scope details, see the
 [leaderboard methodology](https://github.com/JCQuankey/qcheck/blob/main/leaderboard/methodology.md).
 
@@ -167,16 +167,16 @@ rest. For methodology and scope details, see the
 
 qcheck includes a **static review benchmark** for AI-generated quantum code: it
 tracks how often model outputs pass qcheck's current review checks
-(`static_pass_rate`) on a small public Qiskit/OpenQASM task set — an early quality
+(`static_pass_rate`) on a small public Qiskit/OpenQASM task set - an early quality
 signal for agents and LLM workflows. The rows shown today are labelled **SAMPLE/demo**.
 
-- [`leaderboard/README.md`](https://github.com/JCQuankey/qcheck/blob/main/leaderboard/README.md) — how to add a submission and run it
-- [`leaderboard/methodology.md`](https://github.com/JCQuankey/qcheck/blob/main/leaderboard/methodology.md) — scope and methodology
-- [`leaderboard/site/leaderboard.md`](https://github.com/JCQuankey/qcheck/blob/main/leaderboard/site/leaderboard.md) — the generated table
+- [`leaderboard/README.md`](https://github.com/JCQuankey/qcheck/blob/main/leaderboard/README.md) - how to add a submission and run it
+- [`leaderboard/methodology.md`](https://github.com/JCQuankey/qcheck/blob/main/leaderboard/methodology.md) - scope and methodology
+- [`leaderboard/site/leaderboard.md`](https://github.com/JCQuankey/qcheck/blob/main/leaderboard/site/leaderboard.md) - the generated table
 
 ## Contributing
 
-Issues and PRs welcome — especially new failure fixtures (a real LLM-generated
+Issues and PRs welcome - especially new failure fixtures (a real LLM-generated
 snippet that should fail but currently passes, or vice versa). Each fixture
 makes qcheck sharper and feeds the public error taxonomy.
 
