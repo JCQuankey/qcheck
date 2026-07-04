@@ -1,0 +1,80 @@
+name: Release (PyPI Trusted Publishing)
+
+# SAFETY / DESIGN
+#   - No API tokens anywhere. Publishing uses PyPI OIDC Trusted Publishing only.
+#   - Publishing CANNOT succeed until a maintainer configures the Trusted
+#     Publisher on PyPI / TestPyPI (see docs/RELEASING.md). Until then these
+#     jobs fail closed at the auth step and nothing is published.
+#   - Normal pushes never publish. There is no `push` trigger.
+#       * TestPyPI  -> manual only (workflow_dispatch).
+#       * live PyPI -> only when a GitHub Release is published.
+#   - The build job has no publish permissions; only the publish jobs request
+#     `id-token: write`, and each is gated by event type + a GitHub Environment.
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: "Publish target (manual runs go to TestPyPI only)"
+        type: choice
+        options:
+          - testpypi
+        default: testpypi
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install --upgrade pip build twine
+      - run: python -m build
+      - run: twine check dist/*
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          if-no-files-found: error
+
+  publish-testpypi:
+    # Manual dispatch only. Requires the TestPyPI trusted publisher + the
+    # 'testpypi' environment to be configured first.
+    needs: build
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    environment: testpypi
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      - uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: https://test.pypi.org/legacy/
+
+  publish-pypi:
+    # Live PyPI. Runs ONLY when a GitHub Release is published, and only after
+    # the PyPI trusted publisher + 'pypi' environment are configured.
+    needs: build
+    if: github.event_name == 'release'
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      - uses: pypa/gh-action-pypi-publish@release/v1

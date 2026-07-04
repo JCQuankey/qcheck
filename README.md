@@ -33,10 +33,16 @@ git clone https://github.com/JCQuankey/qcheck && cd qcheck
 pip install -e ".[dev]"     # editable install + pytest
 ```
 
-PyPI publishing (`pip install qcheck-quantum`) is planned — the bare `qcheck`
-name is taken on PyPI, so the **distribution** will be `qcheck-quantum` while the
-**command** stays `qcheck`. v0 has **zero runtime dependencies** (standard
-library only).
+Once the first release is published, install from PyPI:
+
+```bash
+pip install qcheck-quantum   # available after the first PyPI release
+```
+
+The PyPI **distribution** name is `qcheck-quantum` (the bare `qcheck` name is
+taken on PyPI); the installed **command** and the import package are both
+`qcheck`. v0 has **zero runtime dependencies** (standard library only). Release
+process: [`docs/RELEASING.md`](https://github.com/JCQuankey/qcheck/blob/main/docs/RELEASING.md).
 
 ## Quickstart
 
@@ -89,7 +95,7 @@ qcheck ships a composite GitHub Action. In your repo's
 ```
 
 The step fails the job when qcheck finds errors or unsafe code. See
-[`examples/github-action.yml`](examples/github-action.yml).
+[`examples/github-action.yml`](https://github.com/JCQuankey/qcheck/blob/main/examples/github-action.yml).
 
 ## SARIF output (GitHub Code Scanning)
 
@@ -138,7 +144,7 @@ exec construct (`os`, `subprocess`, `eval`, `open`, …) marks the snippet
 **unsafe** and exits `2`. QASM input is text-scanned. This is deliberate: an
 agent-facing verifier that *ran* untrusted model output would be a remote-code-
 execution vector (see Qiskit CVE-2025-2000 for the QPY/pickle precedent). See
-[`SECURITY.md`](SECURITY.md) for the full threat model.
+[`SECURITY.md`](https://github.com/JCQuankey/qcheck/blob/main/SECURITY.md) for the full threat model.
 
 ## Scope
 
@@ -149,7 +155,7 @@ so it's safe to run on untrusted model output inside an agent loop or CI.
 
 It's a fast first-pass reviewer — pair it with your tests and simulators for the
 rest. For methodology and scope details, see the
-[leaderboard methodology](leaderboard/methodology.md).
+[leaderboard methodology](https://github.com/JCQuankey/qcheck/blob/main/leaderboard/methodology.md).
 
 ## Roadmap
 
@@ -164,9 +170,9 @@ tracks how often model outputs pass qcheck's current review checks
 (`static_pass_rate`) on a small public Qiskit/OpenQASM task set — an early quality
 signal for agents and LLM workflows. The rows shown today are labelled **SAMPLE/demo**.
 
-- [`leaderboard/README.md`](leaderboard/README.md) — how to add a submission and run it
-- [`leaderboard/methodology.md`](leaderboard/methodology.md) — scope and methodology
-- [`leaderboard/site/leaderboard.md`](leaderboard/site/leaderboard.md) — the generated table
+- [`leaderboard/README.md`](https://github.com/JCQuankey/qcheck/blob/main/leaderboard/README.md) — how to add a submission and run it
+- [`leaderboard/methodology.md`](https://github.com/JCQuankey/qcheck/blob/main/leaderboard/methodology.md) — scope and methodology
+- [`leaderboard/site/leaderboard.md`](https://github.com/JCQuankey/qcheck/blob/main/leaderboard/site/leaderboard.md) — the generated table
 
 ## Contributing
 
@@ -177,7 +183,7 @@ makes qcheck sharper and feeds the public error taxonomy.
 ## Contact
 
 - Technical questions / maintainer contact: **dev@quankey.xyz**
-- Security issues: **security@quankey.xyz** (see [`SECURITY.md`](SECURITY.md))
+- Security issues: **security@quankey.xyz** (see [`SECURITY.md`](https://github.com/JCQuankey/qcheck/blob/main/SECURITY.md))
 
 Maintained by JCQuankey / qcheck contributors. qcheck runs locally, sends no
 telemetry, and reviews code without executing it.
