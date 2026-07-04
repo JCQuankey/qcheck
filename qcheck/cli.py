@@ -20,6 +20,7 @@ from .detect import detect_framework
 from .report import Report
 from .checks_qasm import check_qasm
 from .checks_qiskit import check_qiskit
+from .checks_pennylane import check_pennylane
 from .safety import scan_python_safety
 from .sarif import build_sarif
 from . import rules as rule_catalog
@@ -40,6 +41,11 @@ def verify_text(path: str, text: str) -> Report:
 
     if framework == "qiskit":
         syntax_valid, unsafe, findings, fixes = check_qiskit(text)
+        return Report(framework=framework, syntax_valid=syntax_valid,
+                      findings=findings, suggested_fixes=fixes, unsafe=unsafe)
+
+    if framework == "pennylane":
+        syntax_valid, unsafe, findings, fixes = check_pennylane(text)
         return Report(framework=framework, syntax_valid=syntax_valid,
                       findings=findings, suggested_fixes=fixes, unsafe=unsafe)
 

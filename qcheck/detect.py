@@ -21,6 +21,8 @@ def detect_framework(path: str, text: str) -> str:
         return "qasm2"
 
     if ext == ".py":
+        if "pennylane" in low or "qml." in low:
+            return "pennylane"
         if "qiskit" in low or "quantumcircuit" in low:
             return "qiskit"
         return "python_unknown"

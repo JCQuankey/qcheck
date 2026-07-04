@@ -17,7 +17,7 @@ VALID_LEVELS = ("error", "warning", "info")
 CATEGORIES = ("api-compatibility", "structure", "syntax", "safety", "input")
 
 # Which surface a rule applies to.
-SURFACES = ("qiskit", "openqasm", "python", "cli")
+SURFACES = ("qiskit", "openqasm", "python", "cli", "pennylane")
 
 
 @dataclass(frozen=True)
@@ -154,6 +154,28 @@ _RULES: List[Rule] = [
        "A two-qubit gate uses the same qubit as both operands.",
        "A two-qubit gate needs two distinct qubits; repeating one is almost always a typo.",
        "Use two different qubit indices for the control and target."),
+    # --- PennyLane ---
+    _r("PENNYLANE-QML-MISSING-IMPORT", "PennyLane used without import", "structure",
+       "error", "pennylane",
+       "qml.* PennyLane calls are used but pennylane is never imported.",
+       "The snippet raises NameError at runtime.",
+       "Add 'import pennylane as qml'."),
+    _r("PENNYLANE-DEVICE-ZERO-WIRES", "Device with zero wires", "structure",
+       "error", "pennylane",
+       "qml.device(...) is created with wires=0.",
+       "A device with no wires cannot hold a circuit.",
+       "Set wires to the number of qubits the circuit needs, e.g. wires=2."),
+    _r("PENNYLANE-DEVICE-NEGATIVE-WIRES", "Device with negative wires", "structure",
+       "error", "pennylane",
+       "qml.device(...) is created with a negative wires count.",
+       "A negative wire count is invalid and fails at device construction.",
+       "Use a positive wires count."),
+    _r("PENNYLANE-QNODE-NO-RETURN", "QNode has no return", "structure",
+       "warning", "pennylane",
+       "A function decorated with @qml.qnode(...) has no return statement.",
+       "A QNode must return a measurement, so a return-less QNode yields nothing useful.",
+       "Return a measurement, for example 'return qml.expval(qml.PauliZ(0))'."),
+
     # --- OpenQASM structure ---
     _r("QASM-NO-HEADER", "OpenQASM header missing", "structure",
        "error", "openqasm",

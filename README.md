@@ -2,8 +2,8 @@
 
 **AI writes quantum code. qcheck reviews it.**
 
-`qcheck` is a lightweight review layer for AI-generated Qiskit and OpenQASM
-snippets. It catches common issues early - removed-in-1.0 APIs, unsafe patterns,
+`qcheck` is a lightweight review layer for AI-generated Qiskit, OpenQASM and
+PennyLane snippets. It catches common issues early - removed-in-1.0 APIs, unsafe patterns,
 missing measurements, parse errors - so agents and developers can improve quantum
 code before it reaches humans, CI, or simulators. Tiny, dependency-free, and it
 reviews code without ever executing it.
@@ -139,7 +139,7 @@ uses a synthetic `stdin` URI and is not meant for code-scanning upload.
 
 ## Rule catalog (explain your findings)
 
-qcheck ships **42 rules**, and every finding carries a **stable rule id** (for
+qcheck ships **46 rules**, and every finding carries a **stable rule id** (for
 example `QISKIT-REMOVED-IMPORT`). Each id is backed by catalog metadata - a
 title, category, default severity, a plain-language summary, why it matters, and
 a recommended next step - so a developer or an agent can act on a finding right
@@ -171,6 +171,9 @@ classical bits, two-qubit gates on one qubit, missing measurement,
 `get_counts()` on an unmeasured circuit, and Qiskit-1.0 breaking changes LLMs
 still emit (`execute()`, `assemble()`, `from qiskit import Aer/execute`,
 deprecated gate aliases like `cnot`->`cx`).
+
+**PennyLane:** `qml` used without import, zero/negative device wires, and
+QNodes with no return.
 
 Run `qcheck rules` to see the full catalog with guidance for each rule.
 
