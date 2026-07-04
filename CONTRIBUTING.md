@@ -53,3 +53,10 @@ contributing you agree your work is licensed under Apache-2.0.
 
 General or technical questions: **dev@quankey.xyz**. For security issues, use
 **security@quankey.xyz** (see [`SECURITY.md`](SECURITY.md)), not a public issue.
+
+## Auto-merge
+
+Low-risk changes (docs, copy, the generated site, tests) can be auto-merged:
+add the `automerge` label — and `safe-public` when the change touches the site
+generator. Auto-merge runs only on same-repo pull requests, never on protected
+paths, and merges only after the required CI checks pass.
