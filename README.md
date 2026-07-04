@@ -93,6 +93,19 @@ likely to run.
 - v1: sandboxed simulation (opt-in), PennyLane + Cirq, LLM-powered fix suggestions, GitHub Action, MCP server (`verify_quantum_code`).
 - Public **"Which LLM writes correct quantum code?"** leaderboard (see `leaderboard/`) + anonymized error dataset.
 
+## Leaderboard
+
+qcheck includes an experimental benchmark scaffold:
+**"Which LLM writes correct quantum code?"**
+
+It currently measures the static qcheck pass/fail/unsafe verdict on small
+Qiskit/OpenQASM tasks. It does **not** prove semantic correctness or hardware
+performance. The only results today are clearly-labelled SAMPLE demos.
+
+- [`leaderboard/README.md`](leaderboard/README.md) — how to add a submission and run it
+- [`leaderboard/methodology.md`](leaderboard/methodology.md) — scope and limitations
+- [`leaderboard/site/leaderboard.md`](leaderboard/site/leaderboard.md) — the generated table
+
 ## Contributing
 
 Issues and PRs welcome — especially new failure fixtures (a real LLM-generated

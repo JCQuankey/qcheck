@@ -1,0 +1,18 @@
+{
+  "id": "qiskit_grover_toy",
+  "title": "Toy Grover search skeleton in Qiskit",
+  "framework": "qiskit",
+  "language": "python",
+  "difficulty": "medium",
+  "prompt": "Write a small Qiskit circuit skeleton for a 2-qubit Grover search (oracle + diffuser + measurement).",
+  "expected_features": [
+    "QuantumCircuit with 2 qubits",
+    "oracle and diffusion operations",
+    "measurement",
+    "no filesystem/network/process side effects"
+  ],
+  "qcheck_mode": "static",
+  "scored_by": "qcheck-static-v0",
+  "semantic_execution_required": false,
+  "notes": "qcheck v0 scores static structure and safety. A snippet that writes results to disk (open(...)) or shells out is flagged unsafe. Oracle correctness is future semantic work."
+}

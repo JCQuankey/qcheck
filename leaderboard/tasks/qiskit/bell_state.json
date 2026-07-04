@@ -1,0 +1,18 @@
+{
+  "id": "qiskit_bell_state",
+  "title": "Bell state in Qiskit",
+  "framework": "qiskit",
+  "language": "python",
+  "difficulty": "easy",
+  "prompt": "Write a Qiskit circuit that prepares a Bell state and measures both qubits.",
+  "expected_features": [
+    "QuantumCircuit with 2 qubits",
+    "Hadamard on qubit 0",
+    "CX from qubit 0 to 1",
+    "measurement of both qubits"
+  ],
+  "qcheck_mode": "static",
+  "scored_by": "qcheck-static-v0",
+  "semantic_execution_required": false,
+  "notes": "qcheck v0 scores the static verdict (well-formed, modern, safe, likely-to-run). 'expected_features' is human-readable task intent for future semantic grading; it is NOT auto-verified in v0."
+}
