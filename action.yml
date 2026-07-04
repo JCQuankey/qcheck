@@ -5,7 +5,7 @@ branding:
   color: "blue"
 inputs:
   paths:
-    description: "Files or directories to review (space-separated). Default: the whole repo."
+    description: "Files or directories to review. Space-separated for multiple paths; or one path per line (which allows paths with spaces). Default: the whole repo."
     required: false
     default: "."
   format:
@@ -33,9 +33,12 @@ runs:
     - name: Review quantum code
       shell: bash
       # Inputs are passed via env (never inlined into the shell) to avoid
-      # injection, and the command is assembled as an array. `paths` and `args`
-      # are space-separated (multiple values) and word-split; `output` is a
-      # single value and is quoted, so an output path with spaces works.
+      # injection, and the command is assembled as an array.
+      #   paths: space-separated for multiple paths (backward compatible). If it
+      #          contains newlines, each non-empty line is one path - which lets
+      #          a single path contain spaces.
+      #   output: a single value, quoted (an output path with spaces works).
+      #   args: space-separated extra arguments.
       env:
         QC_PATHS: ${{ inputs.paths }}
         QC_FORMAT: ${{ inputs.format }}
@@ -43,7 +46,13 @@ runs:
         QC_ARGS: ${{ inputs.args }}
       run: |
         cmd=(qcheck verify)
-        read -r -a _paths <<< "$QC_PATHS"; cmd+=("${_paths[@]}")
+        if [[ "$QC_PATHS" == *$'\n'* ]]; then
+          while IFS= read -r line; do
+            [[ "$line" =~ [^[:space:]] ]] && cmd+=("$line")
+          done <<< "$QC_PATHS"
+        else
+          read -r -a _paths <<< "$QC_PATHS"; cmd+=("${_paths[@]}")
+        fi
         [ -n "$QC_FORMAT" ] && cmd+=(--format "$QC_FORMAT")
         [ -n "$QC_OUTPUT" ] && cmd+=(--output "$QC_OUTPUT")
         if [ -n "$QC_ARGS" ]; then read -r -a _extra <<< "$QC_ARGS"; cmd+=("${_extra[@]}"); fi

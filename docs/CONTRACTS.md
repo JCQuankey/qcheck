@@ -147,6 +147,9 @@ Pin the composite action to a released tag:
     output: qcheck.sarif # optional: write SARIF to a file for upload
 ```
 
+`paths` is space-separated for multiple paths; to review a path that
+contains spaces, pass one path per line (a YAML block scalar). 
+
 The action installs qcheck (zero runtime dependencies) and runs `qcheck verify`;
 it needs no secrets. To surface findings as code scanning alerts, add a separate
 `github/codeql-action/upload-sarif` step (which needs `security-events: write` in

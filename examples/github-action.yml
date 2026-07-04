@@ -12,6 +12,10 @@ jobs:
       - uses: actions/checkout@v4
       - uses: JCQuankey/qcheck@v0.6.0
         with:
-          # Review the whole repo; or point at a folder, e.g. "circuits/".
+          # Review the whole repo; or a folder, e.g. "circuits/".
           paths: "."
+          # For paths containing spaces, put one path per line instead:
+          #   paths: |
+          #     my circuit.py
+          #     openqasm sample.qasm
       # The step fails the job if qcheck finds errors (exit 1) or unsafe code (exit 2).
