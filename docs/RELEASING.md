@@ -17,7 +17,7 @@ never publish. Normal pushes never publish anything.
 ## One-time setup (maintainer)
 
 The TestPyPI and PyPI trusted publishers for `qcheck-quantum` are already
-configured (`0.2.0` shipped on 2026-07-04; `0.5.0` is the next release). The steps below are kept for
+configured (`0.2.0` shipped on 2026-07-04; `0.5.0` shipped; `0.6.0` is the next release). The steps below are kept for
 reference / re-setup. They must be done in a browser and cannot be automated.
 Do TestPyPI first.
 
