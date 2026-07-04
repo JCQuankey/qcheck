@@ -1,0 +1,42 @@
+name: Build & check distribution
+
+# Builds the sdist + wheel and validates packaging metadata. This workflow
+# NEVER publishes anything (no PyPI steps, no id-token permission). It only
+# proves the distribution builds cleanly and uploads it for inspection.
+
+on:
+  pull_request:
+    paths:
+      - "pyproject.toml"
+      - "qcheck/**"
+      - "README.md"
+      - "LICENSE"
+      - "NOTICE"
+      - ".github/workflows/build.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install build tooling
+        run: python -m pip install --upgrade pip build twine pytest
+      - name: Run tests
+        run: python -m pytest -q
+      - name: Build sdist + wheel
+        run: python -m build
+      - name: Check metadata (does not upload)
+        run: twine check dist/*
+      - name: Upload distribution for inspection
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          if-no-files-found: error

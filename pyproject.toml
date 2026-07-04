@@ -4,9 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 # Distribution name: 'qcheck' is already taken on PyPI (an unrelated data-
-# validation library), so we publish as 'qcheck-quantum' (verified available
-# 2026-06-28). The CLI command and import package remain 'qcheck'.
-# See docs/plan/SESSION_01_HANDOFF.md for the open naming decisions.
+# validation library), so we publish as 'qcheck-quantum'. The CLI command and
+# import package both remain 'qcheck'.
 name = "qcheck-quantum"
 version = "0.2.0"
 description = "Verify LLM-generated quantum code (Qiskit / OpenQASM) statically and safely."
@@ -15,7 +14,7 @@ requires-python = ">=3.9"
 license = { text = "Apache-2.0" }
 authors = [{ name = "qcheck contributors" }]
 maintainers = [{ name = "JCQuankey", email = "dev@quankey.xyz" }]
-keywords = ["quantum", "qiskit", "openqasm", "llm", "linter", "verification", "static-analysis", "mcp"]
+keywords = ["quantum", "qiskit", "openqasm", "llm", "linter", "code-review", "static-analysis", "sarif"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
@@ -34,6 +33,8 @@ dependencies = []
 
 [project.optional-dependencies]
 dev = ["pytest>=7"]
+# Maintainer tooling for building/checking distributions (not needed at runtime).
+release = ["build>=1", "twine>=5"]
 
 [project.urls]
 Homepage = "https://github.com/JCQuankey/qcheck"
@@ -45,3 +46,8 @@ qcheck = "qcheck.cli:main"
 
 [tool.setuptools]
 packages = ["qcheck"]
+
+[tool.pytest.ini_options]
+# Don't collect tests out of local build/dist copies (avoids duplicate-module
+# import errors after `python -m build`).
+norecursedirs = ["build", "dist", ".venv", "*.egg-info"]
