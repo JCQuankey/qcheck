@@ -148,11 +148,15 @@ releases, which keeps CI gates and agent loops consistent as qcheck grows.
 
 ## What v0 checks
 
-**OpenQASM 2/3:** missing header, undeclared registers, index-out-of-range,
-malformed measurements, unsupported includes, suspicious non-QASM content.
+**OpenQASM 2/3:** missing header, undeclared and duplicate registers,
+index-out-of-range, malformed measurements, missing measurement, OpenQASM 2/3
+syntax mismatches, unsupported includes, suspicious non-QASM content.
 **Qiskit Python:** Python syntax, missing `QuantumCircuit` import, missing
-measurement, and Qiskit-1.0 breaking changes LLMs still emit (`execute()`,
+measurement, `get_counts()` on an unmeasured circuit, and Qiskit-1.0 breaking
+changes LLMs still emit (`execute()`, `assemble()`,
 `from qiskit import Aer/execute`, deprecated gate aliases like `cnot`->`cx`).
+
+Run `qcheck rules` to see the full catalog with guidance for each rule.
 
 ## Safety policy
 
