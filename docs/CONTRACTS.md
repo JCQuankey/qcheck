@@ -54,7 +54,7 @@ outranks `0`).
 **Stable fields agents can rely on:**
 - `qcheck_version` - the version that produced the output.
 - `status` - one of `pass`, `warning`, `fail`.
-- `framework` - `qasm2`, `qasm3`, `qiskit`, `python_unknown`, or `unknown`.
+- `framework` - `qasm2`, `qasm3`, `qiskit`, `pennylane`, `python_unknown`, or `unknown`.
 - `static_checks` - the full list of findings. Each finding has:
   - `id` - the stable rule ID (see the catalog).
   - `level` - `error`, `warning`, or `info`.
