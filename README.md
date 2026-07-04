@@ -57,7 +57,10 @@ qcheck 0.2.0  [FAIL]  examples/broken_qiskit_execute.py  (qiskit)
 ```
 
 Reviewing multiple files prints a per-file summary and exits with the worst
-result found (unsafe > failed > passed).
+result found (unsafe > failed > passed). Directory recursion skips virtualenvs,
+VCS, caches, and build output (`.venv`, `node_modules`, `.git`, `site-packages`,
+`build`, `dist`, …) so it reviews your code, not your dependencies. To review a
+file inside one of those, pass it explicitly.
 
 ## JSON output (for agents & CI)
 
