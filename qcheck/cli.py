@@ -22,6 +22,7 @@ from .checks_qasm import check_qasm
 from .checks_qiskit import check_qiskit
 from .safety import scan_python_safety
 from .sarif import build_sarif
+from . import rules as rule_catalog
 
 EXIT_PASS = 0
 EXIT_FAIL = 1
@@ -165,6 +166,22 @@ def _verify_one(display: str, lang: Optional[str], stdin_text: Optional[str]) ->
         return (display, None, f"internal error: {e}")
 
 
+def _run_rules(args) -> int:
+    """`qcheck rules` - print the rule catalog (human table or JSON)."""
+    cat = rule_catalog.catalog()
+    if args.json:
+        print(json.dumps({"qcheck_version": __version__,
+                          "rules": [r.to_dict() for r in cat]}, indent=2))
+        return EXIT_PASS
+    print(f"qcheck {__version__} - {len(cat)} rules\n")
+    print(f"{'RULE':24} {'LEVEL':8} {'CATEGORY':18} SUMMARY")
+    for r in cat:
+        print(f"{r.id:24} {r.default_level:8} {r.category:18} {r.summary}")
+    print("\nRun `qcheck rules --json` for full metadata "
+          "(why it matters + recommended action).")
+    return EXIT_PASS
+
+
 def _worst_exit(units) -> int:
     """Worst-case exit code across verified units (findings-based, not format)."""
     worst = EXIT_PASS
@@ -199,7 +216,13 @@ def main(argv: Optional[List[str]] = None) -> int:
     p_verify.add_argument("--lang", choices=sorted(_LANG_EXT),
                           help="force language for stdin input")
 
+    p_rules = sub.add_parser("rules", help="list qcheck's rule catalog")
+    p_rules.add_argument("--json", action="store_true",
+                         help="emit the rule catalog as JSON (for agents/CI)")
+
     args = parser.parse_args(argv)
+    if args.command == "rules":
+        return _run_rules(args)
     if args.command != "verify":
         parser.print_help()
         return EXIT_INTERNAL

@@ -10,6 +10,7 @@ from typing import List, Optional, Tuple
 
 from . import __version__
 from .report import Report
+from . import rules as rule_catalog
 
 INFORMATION_URI = "https://github.com/JCQuankey/qcheck"
 SCHEMA = "https://json.schemastore.org/sarif-2.1.0.json"
@@ -17,28 +18,22 @@ SCHEMA = "https://json.schemastore.org/sarif-2.1.0.json"
 # qcheck level -> SARIF level. SARIF levels: none | note | warning | error.
 _LEVEL = {"error": "error", "warning": "warning", "info": "note"}
 
-# Stable, human-readable rule metadata. Unknown ids still get a rule entry
-# (falling back to the id) so results always reference a defined rule.
-_RULE_DESC = {
-    "QASM-NO-HEADER": "OpenQASM header missing",
-    "QASM-UNDECLARED-REG": "Use of an undeclared quantum/classical register",
-    "QASM-INDEX-RANGE": "Register index out of declared range",
-    "QASM-MEASURE-SRC": "Invalid measurement source operand",
-    "QASM-MEASURE-TGT": "Invalid measurement target operand",
-    "QASM-INCLUDE": "Unsupported or missing include",
-    "QASM-NO-SEMICOLON": "Statement missing a terminating semicolon",
-    "QASM-SUSPICIOUS": "Content does not look like valid OpenQASM",
-    "QISKIT-MISSING-IMPORT": "QuantumCircuit used without importing it",
-    "QISKIT-NO-CIRCUIT": "No QuantumCircuit construction detected",
-    "QISKIT-NO-MEASURE": "Circuit has no measurement",
-    "QISKIT-EXECUTE": "Use of execute(), removed in Qiskit 1.0",
-    "QISKIT-REMOVED-IMPORT": "Import removed in Qiskit 1.0 (e.g. execute, Aer)",
-    "QISKIT-DEPRECATED-GATE": "Deprecated gate alias",
-    "PY-SYNTAX": "Python syntax error",
-    "PY-UNSAFE-IMPORT": "Unsafe import (potential remote-code-execution vector)",
-    "PY-UNSAFE-CALL": "Unsafe call (potential remote-code-execution vector)",
-    "UNSUPPORTED": "Unsupported framework or file type",
-}
+
+def _rule_entry(rid: str) -> dict:
+    """A SARIF reportingDescriptor enriched from the rule catalog."""
+    entry = {"id": rid, "name": rid}
+    if rule_catalog.known(rid):
+        r = rule_catalog.get(rid)
+        entry["name"] = r.title
+        entry["shortDescription"] = {"text": r.title}
+        entry["fullDescription"] = {"text": f"{r.why_it_matters} {r.recommended_action}"}
+        entry["help"] = {"text": (f"{r.summary}\n\nWhy it matters: {r.why_it_matters}\n"
+                                  f"Recommended action: {r.recommended_action}")}
+        entry["defaultConfiguration"] = {"level": _LEVEL.get(r.default_level, "warning")}
+        entry["properties"] = {"category": r.category, "appliesTo": r.applies_to}
+    else:
+        entry["shortDescription"] = {"text": rid}
+    return entry
 
 
 def _sarif_uri(display: str) -> str:
@@ -73,11 +68,10 @@ def build_sarif(results: List[Tuple[str, Report]],
         r["message"]["text"],
     ))
 
-    rules = [{
-        "id": rid,
-        "name": rid,
-        "shortDescription": {"text": _RULE_DESC.get(rid, rid)},
-    } for rid in sorted(rule_ids)]
+    # Only rules observed in this run are described (results reference rules by
+    # ruleId, so this stays lean and every result's rule is defined). The full
+    # catalog is available via `qcheck rules --json`.
+    rules = [_rule_entry(rid) for rid in sorted(rule_ids)]
 
     return {
         "version": "2.1.0",
