@@ -33,6 +33,7 @@ def check_qasm(text: str, framework: str) -> Tuple[bool, List[Finding], List[str
     header_seen = False
     saw_measure = False
     saw_gate = False
+    seen_includes: set = set()
 
     def _dup(name: str, line: int) -> bool:
         if name in qregs or name in cregs:
@@ -78,6 +79,11 @@ def check_qasm(text: str, framework: str) -> Tuple[bool, List[Finding], List[str
         if low.startswith("include"):
             m = _INCLUDE.search(stmt)
             inc = m.group(1) if m else ""
+            if inc in seen_includes:
+                findings.append(Finding(
+                    "QASM-DUPLICATE-INCLUDE", "warning",
+                    f"Include {inc!r} appears more than once.", i))
+            seen_includes.add(inc)
             if inc not in _SAFE_INCLUDES:
                 findings.append(Finding(
                     "QASM-INCLUDE", "warning",
