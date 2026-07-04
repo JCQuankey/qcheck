@@ -139,7 +139,7 @@ uses a synthetic `stdin` URI and is not meant for code-scanning upload.
 
 ## Rule catalog (explain your findings)
 
-qcheck ships **41 rules**, and every finding carries a **stable rule id** (for
+qcheck ships **42 rules**, and every finding carries a **stable rule id** (for
 example `QISKIT-REMOVED-IMPORT`). Each id is backed by catalog metadata - a
 title, category, default severity, a plain-language summary, why it matters, and
 a recommended next step - so a developer or an agent can act on a finding right

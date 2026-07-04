@@ -18,7 +18,8 @@ _REMOVED_FROM_QISKIT = {"execute", "Aer", "IBMQ", "BasicAer", "assemble"}
 _1Q_POS_GATES = {"h", "x", "y", "z", "s", "t", "sdg", "tdg", "sx", "sxdg", "id"}
 _2Q_POS_GATES = {"cx", "cz", "cy", "ch", "swap", "dcx", "iswap", "ecr"}
 # Subpackages removed from modern Qiskit.
-_REMOVED_MODULES = ("qiskit.aqua", "qiskit.ignis", "qiskit.chemistry")
+_REMOVED_MODULES = ("qiskit.aqua", "qiskit.ignis", "qiskit.chemistry",
+                    "qiskit.tools", "qiskit.test")
 # Import paths that moved to a separate package.
 _MOVED_MODULE_PATHS = {"qiskit.providers.aer": "qiskit_aer"}
 # Names that must be imported before use (checked as bare Name calls).
@@ -26,6 +27,7 @@ _NEEDS_IMPORT = {
     "QuantumRegister": "QISKIT-REGISTER-MISSING-IMPORT",
     "ClassicalRegister": "QISKIT-REGISTER-MISSING-IMPORT",
     "transpile": "QISKIT-TRANSPILE-MISSING-IMPORT",
+    "Parameter": "QISKIT-PARAMETER-MISSING-IMPORT",
 }
 _DEPRECATED_METHODS = {
     "cnot": "cx", "toffoli": "ccx", "fredkin": "cswap", "iden": "id",
