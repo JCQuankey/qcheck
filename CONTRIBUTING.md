@@ -48,3 +48,8 @@ qcheck verify examples/broken_qiskit_execute.py --json
 
 Keep PRs focused. Include tests. Describe what the change detects and why. By
 contributing you agree your work is licensed under Apache-2.0.
+
+## Questions
+
+General or technical questions: **dev@quankey.xyz**. For security issues, use
+**security@quankey.xyz** (see [`SECURITY.md`](SECURITY.md)), not a public issue.

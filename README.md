@@ -112,6 +112,14 @@ Issues and PRs welcome — especially new failure fixtures (a real LLM-generated
 snippet that should fail but currently passes, or vice versa). Each fixture
 makes qcheck sharper and feeds the public error taxonomy.
 
+## Contact
+
+- Technical questions / maintainer contact: **dev@quankey.xyz**
+- Security issues: **security@quankey.xyz** (see [`SECURITY.md`](SECURITY.md))
+
+Maintained by JCQuankey / qcheck contributors. qcheck runs locally, has no remote
+telemetry, and does not execute untrusted Python in v0.
+
 ## License
 
 Apache-2.0.
