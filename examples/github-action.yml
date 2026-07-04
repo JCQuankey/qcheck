@@ -1,6 +1,6 @@
 # Example: review AI-generated quantum code in CI with qcheck.
 # Copy this into .github/workflows/qcheck.yml in your own repository.
-# This file is an EXAMPLE only — it does not run in the qcheck repo.
+# This file is an EXAMPLE only - it does not run in the qcheck repo.
 name: qcheck
 on: [pull_request, push]
 permissions:
@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: JCQuankey/qcheck@main
+      - uses: JCQuankey/qcheck@v0.2.0
         with:
           # Review the whole repo; or point at a folder, e.g. "circuits/".
           paths: "."
