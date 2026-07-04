@@ -1,0 +1,18 @@
+{
+  "id": "openqasm_measurement_registers",
+  "title": "Correct registers and measurement in OpenQASM 2",
+  "framework": "openqasm",
+  "language": "qasm2",
+  "difficulty": "easy",
+  "prompt": "Write an OpenQASM 2.0 program that declares the correct quantum and classical registers, applies a couple of gates, and measures each qubit into a valid classical bit (no out-of-range indices, no undeclared registers).",
+  "expected_features": [
+    "OPENQASM 2.0 header",
+    "declared qreg and creg of matching size",
+    "gates using only declared, in-range indices",
+    "measure into declared classical bits"
+  ],
+  "qcheck_mode": "static",
+  "scored_by": "qcheck-static-v0",
+  "semantic_execution_required": false,
+  "notes": "Targets the exact structural mistakes qcheck v0 catches: undeclared registers, out-of-range indices, malformed measurements. This is where static checking is strongest."
+}

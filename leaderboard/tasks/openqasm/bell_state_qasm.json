@@ -1,0 +1,18 @@
+{
+  "id": "openqasm_bell_state",
+  "title": "Bell state in OpenQASM 2",
+  "framework": "openqasm",
+  "language": "qasm2",
+  "difficulty": "easy",
+  "prompt": "Write an OpenQASM 2.0 program that prepares a Bell state on two qubits and measures both into a classical register.",
+  "expected_features": [
+    "OPENQASM 2.0 header and qelib1.inc include",
+    "qreg of 2 qubits and creg of 2 bits",
+    "h on q[0] and cx q[0],q[1]",
+    "measure both qubits"
+  ],
+  "qcheck_mode": "static",
+  "scored_by": "qcheck-static-v0",
+  "semantic_execution_required": false,
+  "notes": "qcheck v0 checks header, register declarations, index ranges, and measurement validity. Semantic correctness of the state is future work."
+}
