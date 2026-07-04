@@ -3,6 +3,32 @@
 All notable changes to qcheck (`qcheck-quantum` on PyPI). This project follows
 semantic versioning.
 
+## 0.4.0
+
+qcheck 0.4.0 expands static review coverage with seven new circuit-integrity
+checks for common AI-generated Qiskit and OpenQASM mistakes. The catalog now
+includes 30 rules, each with structured guidance for developers, CI and agents.
+This release also documents qcheck's public machine-readable output contracts.
+
+### Added
+- **Seven circuit-integrity rules** (catalog now 30):
+  - `QISKIT-ZERO-QUBITS` - a zero-qubit circuit.
+  - `QISKIT-QUBIT-INDEX-RANGE` - a qubit index past the circuit size.
+  - `QISKIT-CLBIT-INDEX-RANGE` - a classical-bit index past the circuit size.
+  - `QISKIT-MEASURE-NO-CLBITS` - `measure()` on a circuit with no classical bits.
+  - `QISKIT-SAME-QUBIT-2Q` - a two-qubit gate using one qubit twice.
+  - `QASM-ZERO-REGISTER` - a register declared with size 0.
+  - `QASM-SAME-QUBIT-2Q` - a two-qubit gate using one qubit twice.
+- **Output contract documentation** ([`docs/CONTRACTS.md`](docs/CONTRACTS.md)):
+  the stable JSON, `qcheck rules --json`, SARIF and exit-code contracts that
+  agents and CI can rely on, backed by contract tests.
+
+### Unchanged
+- `pip install qcheck-quantum`; the command and import package remain `qcheck`.
+- `qcheck verify` output, `--json` (single object and multi-file envelope),
+  SARIF 2.1.0 and exit codes are backward compatible.
+- Zero runtime dependencies; qcheck reviews code without executing it.
+
 ## 0.3.0
 
 qcheck 0.3.0 makes findings easier to understand and act on. This release adds a
