@@ -17,10 +17,37 @@ _REMOVED_FROM_QISKIT = {"execute", "Aer", "IBMQ", "BasicAer", "assemble"}
 # so every integer literal argument is a qubit index we can range-check.
 _1Q_POS_GATES = {"h", "x", "y", "z", "s", "t", "sdg", "tdg", "sx", "sxdg", "id"}
 _2Q_POS_GATES = {"cx", "cz", "cy", "ch", "swap", "dcx", "iswap", "ecr"}
+# Subpackages removed from modern Qiskit.
+_REMOVED_MODULES = ("qiskit.aqua", "qiskit.ignis", "qiskit.chemistry")
+# Import paths that moved to a separate package.
+_MOVED_MODULE_PATHS = {"qiskit.providers.aer": "qiskit_aer"}
+# Names that must be imported before use (checked as bare Name calls).
+_NEEDS_IMPORT = {
+    "QuantumRegister": "QISKIT-REGISTER-MISSING-IMPORT",
+    "ClassicalRegister": "QISKIT-REGISTER-MISSING-IMPORT",
+    "transpile": "QISKIT-TRANSPILE-MISSING-IMPORT",
+}
 _DEPRECATED_METHODS = {
     "cnot": "cx", "toffoli": "ccx", "fredkin": "cswap", "iden": "id",
     "mct": "mcx",
 }
+
+
+def _flag_module(mod: str, line, findings: List[Finding]) -> None:
+    """Flag imports of removed or moved Qiskit subpackages."""
+    for removed in _REMOVED_MODULES:
+        if mod == removed or mod.startswith(removed + "."):
+            findings.append(Finding(
+                "QISKIT-REMOVED-MODULE", "error",
+                f"'{mod}' was removed from Qiskit; this import will fail on a "
+                f"modern Qiskit install.", line))
+            return
+    for moved, pkg in _MOVED_MODULE_PATHS.items():
+        if mod == moved or mod.startswith(moved + "."):
+            findings.append(Finding(
+                "QISKIT-DEPRECATED-PROVIDER-PATH", "warning",
+                f"'{mod}' moved out of qiskit; import from '{pkg}' instead.", line))
+            return
 
 
 def check_qiskit(text: str) -> Tuple[bool, bool, List[Finding], List[str]]:
@@ -48,9 +75,12 @@ def check_qiskit(text: str) -> Tuple[bool, bool, List[Finding], List[str]]:
     has_measure = False
     get_counts_line = None
 
+    needed = {}   # name -> (rule_id, line) for import-required names actually used
+
     for node in ast.walk(tree):
         if isinstance(node, ast.ImportFrom):
             mod = (node.module or "")
+            _flag_module(mod, getattr(node, "lineno", None), findings)
             for alias in node.names:
                 imported_names.add(alias.asname or alias.name)
                 if mod == "qiskit" and alias.name in _REMOVED_FROM_QISKIT:
@@ -68,9 +98,14 @@ def check_qiskit(text: str) -> Tuple[bool, bool, List[Finding], List[str]]:
         elif isinstance(node, ast.Import):
             for alias in node.names:
                 module_imports.add(alias.name.split(".")[0])
+                imported_names.add((alias.asname or alias.name).split(".")[0])
+                _flag_module(alias.name, getattr(node, "lineno", None), findings)
         elif isinstance(node, ast.Call):
             func = node.func
             if isinstance(func, ast.Name):
+                if func.id in _NEEDS_IMPORT:
+                    needed.setdefault(func.id, (_NEEDS_IMPORT[func.id],
+                                                getattr(node, "lineno", None)))
                 if func.id == "QuantumCircuit":
                     uses_quantumcircuit = True
                 elif func.id == "execute":
@@ -106,6 +141,13 @@ def check_qiskit(text: str) -> Tuple[bool, bool, List[Finding], List[str]]:
             "QuantumCircuit is used but never imported "
             "('from qiskit import QuantumCircuit').", 1))
         fixes.append("Add 'from qiskit import QuantumCircuit'.")
+
+    for name, (rule_id, line) in needed.items():
+        if name not in imported_names:
+            findings.append(Finding(
+                rule_id, "error",
+                f"{name} is used but never imported.", line))
+            fixes.append(f"Import {name} from qiskit before using it.")
 
     if uses_quantumcircuit and not has_measure:
         findings.append(Finding(

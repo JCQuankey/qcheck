@@ -134,7 +134,8 @@ def check_qasm(text: str, framework: str) -> Tuple[bool, List[Finding], List[str
 
         # generic gate application: validate every indexed register reference
         saw_gate = True
-        _check_refs(stmt, qregs, cregs, i, findings, declared_required=True)
+        _check_refs(stmt, qregs, cregs, i, findings, declared_required=True,
+                    qubit_context=True)
         # same register element used more than once as an operand (e.g. cx q[0],q[0])
         seen_ops = set()
         for nm, ix in _INDEXED.findall(stmt):
@@ -164,12 +165,19 @@ def check_qasm(text: str, framework: str) -> Tuple[bool, List[Finding], List[str
     return syntax_valid, findings, fixes
 
 
-def _check_refs(stmt, qregs, cregs, line, findings, declared_required):
+def _check_refs(stmt, qregs, cregs, line, findings, declared_required,
+                qubit_context=False):
     for name, idx in _INDEXED.findall(stmt):
         idx = int(idx)
         if name in qregs:
             size = qregs[name]
         elif name in cregs:
+            if qubit_context:
+                findings.append(Finding(
+                    "QASM-CLASSICAL-AS-QUBIT", "error",
+                    f"Classical register {name!r} used where a qubit is "
+                    f"expected.", line))
+                continue
             size = cregs[name]
         else:
             if declared_required:
@@ -197,6 +205,15 @@ def _check_measure(stmt, qregs, cregs, line, findings, fixes):
         # bare `measure q;` broadcast -- accept, just validate refs
         _check_refs(stmt, qregs, cregs, line, findings, declared_required=True)
         return
+
+    # Whole-register measurement with mismatched sizes (e.g. measure q -> c
+    # where q has 3 qubits but c has 2 bits) broadcasts incorrectly.
+    if "[" not in src and "[" not in tgt and src in qregs and tgt in cregs \
+            and qregs[src] != cregs[tgt]:
+        findings.append(Finding(
+            "QASM-MEASURE-SIZE-MISMATCH", "warning",
+            f"Measuring {src}[{qregs[src]}] into {tgt}[{cregs[tgt]}]: register "
+            f"sizes differ.", line))
 
     # source must be a qubit register, target a classical register
     for name, idx in _INDEXED.findall(src):
