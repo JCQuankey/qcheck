@@ -3,6 +3,32 @@
 All notable changes to qcheck (`qcheck-quantum` on PyPI). This project follows
 semantic versioning.
 
+## 0.7.0
+
+qcheck 0.7.0 improves CI usability and review coverage. The GitHub Action now
+accepts one path per line so paths with spaces work, and the catalog grows to
+42 rules with wider coverage of common AI-generated mistakes.
+
+### Added
+- **GitHub Action: one-path-per-line input.** `paths` may now be a newline-
+  delimited list, so a single path containing spaces is supported. The existing
+  space-separated form is unchanged.
+- **QISKIT-PARAMETER-MISSING-IMPORT** (catalog now 42): `Parameter` used without
+  an import.
+
+### Improved
+- **Wider removed-module coverage**: `qiskit.tools` and `qiskit.test` imports are
+  now flagged.
+- **Bare-form OpenQASM measurement checks**: `measure q -> c` referencing an
+  undeclared register is now caught (previously only indexed operands were
+  checked).
+
+### Unchanged
+- `pip install qcheck-quantum`; the command and import package remain `qcheck`.
+- `qcheck verify` output, `--json` (single object and multi-file envelope),
+  `qcheck rules --json`, SARIF 2.1.0 and exit codes are backward compatible.
+- Zero runtime dependencies; qcheck reviews code without executing it.
+
 ## 0.6.0
 
 qcheck 0.6.0 expands review coverage to 41 rules and strengthens regression
