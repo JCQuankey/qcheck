@@ -181,6 +181,24 @@ calls.
 
 Run `qcheck rules` to see the full catalog with guidance for each rule.
 
+## Suppressing findings in CI
+
+Waive a specific finding on the line it is reported, or disable a rule for a
+run - both are counted in every output, never silent:
+
+```python
+qc.cnot(0, 1)  # qcheck: ignore[QISKIT-DEPRECATED-GATE]
+```
+
+```bash
+qcheck verify src/ --disable UNSUPPORTED        # skip non-quantum .py files
+qcheck verify snippet.py --no-inline-suppress   # agent loops: ignore in-code directives
+```
+
+Safety findings (`PY-UNSAFE-*`, `QASM-SUSPICIOUS`) can never be suppressed -
+inline comments live inside the code under review, so the safety screen cannot
+be waived from in-band. Details in [docs/CONTRACTS.md](docs/CONTRACTS.md).
+
 ## Safety policy
 
 `qcheck` **never executes the input.** Qiskit snippets are analyzed with the

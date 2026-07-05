@@ -25,6 +25,9 @@ class Report:
     findings: List[Finding] = field(default_factory=list)
     suggested_fixes: List[str] = field(default_factory=list)
     unsafe: bool = False
+    # Count of findings dropped by suppression (inline ignores / --disable).
+    # Additive field: 0 means nothing was suppressed.
+    suppressed: int = 0
     # v0 does NOT execute code. This field documents that explicitly.
     runnable_in_simulator: str = "not_run"
     runnable_reason: str = (
@@ -69,5 +72,6 @@ class Report:
             "errors": [asdict(f) for f in self.errors],
             "warnings": [asdict(f) for f in self.warnings],
             "suggested_fixes": self.suggested_fixes,
+            "suppressed": self.suppressed,
             "confidence": self.confidence,
         }

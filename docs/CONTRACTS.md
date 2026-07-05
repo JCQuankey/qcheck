@@ -62,6 +62,8 @@ outranks `0`).
   - `line` - the 1-based source line, or `null` when not line-specific.
 - `errors` / `warnings` - convenience subsets of `static_checks` by level.
 - `suggested_fixes` - practical guidance strings.
+- `suppressed` - count of findings dropped by suppression (see below); `0`
+  when nothing was suppressed.
 
 `confidence` is a heuristic 0.0-1.0 signal, not a correctness guarantee.
 
@@ -82,7 +84,7 @@ For more than one reviewed file, qcheck emits an aggregate envelope:
 - `results` - an array; each entry is the single-file object above **plus** a
   `path` field naming the reviewed file.
 - `summary` - counts across the run: `files`, `passed`, `failed`, `unsafe`,
-  `read_errors`.
+  `read_errors`, `suppressed`.
 
 A single reviewed file uses the single-object shape above (no envelope), which
 keeps existing single-file consumers working.
@@ -115,6 +117,40 @@ Every rule provides: `id`, `title`, `category`, `default_level`, `applies_to`,
 surface: `qiskit`, `openqasm`, `pennylane`, `cirq`, `python`, or `cli`. Agents
 can use this catalog as a stable knowledge base of what qcheck reviews and how
 to act on each finding.
+
+## Suppressions
+
+qcheck supports two counted, never-silent suppression mechanisms:
+
+- **Inline, line-scoped**: `# qcheck: ignore[RULE-ID]` (Python) or
+  `// qcheck: ignore[RULE-ID]` (OpenQASM), with one or more comma-separated
+  rule IDs. The directive applies only to findings reported on that same
+  line; rule IDs are mandatory (a bare `ignore` does nothing). For findings
+  on multi-line statements, place the directive on the line qcheck reports.
+- **Run-wide**: `--disable RULE-ID` (repeatable; comma lists accepted).
+  Unknown rule IDs emit a warning on stderr and the run continues, so a
+  pinned CI flag list survives rule renames.
+
+Contract:
+
+- Suppressed findings are **omitted** from `static_checks`, `errors`,
+  `warnings`, human output and SARIF `results`, and no longer affect
+  `status`, `confidence` or the exit code.
+- The count of suppressed findings is always reported: the additive
+  `suppressed` field in the single-file JSON object and per-result, plus
+  `summary.suppressed` for multi-file runs, and a summary line in human
+  output.
+- **Safety findings are never suppressible** by either mechanism:
+  `PY-UNSAFE-IMPORT`, `PY-UNSAFE-CALL` and `QASM-SUSPICIOUS` cannot be
+  ignored inline or disabled (`--disable` refuses them with exit `3`).
+  Inline directives live inside the untrusted, often AI-generated code
+  qcheck reviews, so the safety screen cannot be waived in-band.
+- `UNSUPPORTED` can be disabled from the CLI (`--disable UNSUPPORTED`, the
+  escape hatch for scanning mixed repos) but not from inline comments.
+- `--no-inline-suppress` makes qcheck ignore all inline directives - for
+  agent loops that must not let reviewed code influence its own review.
+- `suggested_fixes` strings are not linked to individual findings and are
+  not filtered by suppression (documented limitation).
 
 ## SARIF (GitHub Code Scanning)
 
