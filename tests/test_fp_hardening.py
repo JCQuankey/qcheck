@@ -123,3 +123,50 @@ def test_unsafe_import_alone_still_marks_unsafe():
     r = verify_text("s.py", "import os\nx = 1\n")
     assert r.unsafe
     assert "PY-UNSAFE-IMPORT" in {f.id for f in r.findings}
+
+
+# --- builtins-namespace bypass hardening (Codex blocker #1) ---
+
+def test_builtins_subscript_open_is_unsafe():
+    r = verify_text("s.py", "__builtins__['open']('x', 'w')\n")
+    assert r.unsafe and "PY-UNSAFE-CALL" in {f.id for f in r.findings}
+
+
+def test_getattr_builtins_open_is_unsafe():
+    r = verify_text("s.py", "getattr(__builtins__, 'open')('x', 'w')\n")
+    assert r.unsafe and "PY-UNSAFE-CALL" in {f.id for f in r.findings}
+
+
+def test_import_builtins_dot_open_is_unsafe():
+    r = verify_text("s.py", "import builtins\nbuiltins.open('x', 'w')\n")
+    assert r.unsafe
+    ids = {f.id for f in r.findings}
+    assert "PY-UNSAFE-IMPORT" in ids and "PY-UNSAFE-CALL" in ids
+
+
+def test_from_builtins_import_open_alias_is_unsafe():
+    r = verify_text("s.py", "from builtins import open as o\no('x', 'w')\n")
+    assert r.unsafe and "PY-UNSAFE-CALL" in {f.id for f in r.findings}
+
+
+def test_builtins_system_via_namespace_is_unsafe():
+    r = verify_text("s.py", "import builtins\nbuiltins.system('id')\n")
+    assert r.unsafe
+
+
+def test_dynamic_builtins_subscript_is_unsafe():
+    # A non-constant key into __builtins__ cannot be proven safe -> flag it.
+    r = verify_text("s.py", "k = 'open'\n__builtins__[k]('x', 'w')\n")
+    assert r.unsafe
+
+
+def test_dunder_import_os_still_unsafe():
+    r = verify_text("s.py", "__import__('os').system('id')\n")
+    assert r.unsafe
+
+
+def test_benign_backend_run_still_clean_after_builtins_fix():
+    text = ("from qiskit import QuantumCircuit\n"
+            "qc = QuantumCircuit(2, 2)\nqc.measure_all()\nbackend.run(qc)\n")
+    r = verify_text("s.py", text)
+    assert not r.unsafe and _exit_code(r) == 0
