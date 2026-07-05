@@ -33,7 +33,7 @@ outranks `0`).
 
 ```json
 {
-  "qcheck_version": "0.10.0",
+  "qcheck_version": "0.10.1",
   "status": "fail",
   "framework": "qiskit",
   "syntax_valid": true,
@@ -73,7 +73,7 @@ For more than one reviewed file, qcheck emits an aggregate envelope:
 
 ```json
 {
-  "qcheck_version": "0.10.0",
+  "qcheck_version": "0.10.1",
   "results": [
     { "path": "circuits/bell.py", "status": "pass", "static_checks": [], "...": "..." }
   ],
@@ -96,7 +96,7 @@ keeps existing single-file consumers working.
 
 ```json
 {
-  "qcheck_version": "0.10.0",
+  "qcheck_version": "0.10.1",
   "rules": [
     {
       "id": "QISKIT-EXECUTE",
@@ -178,7 +178,7 @@ Pin the composite action to a released tag:
 
 ```yaml
 - uses: actions/checkout@v4
-- uses: JCQuankey/qcheck@v0.10.0
+- uses: JCQuankey/qcheck@v0.10.1
   with:
     paths: "."          # files or folders to review
     format: sarif       # optional: human (default) or sarif

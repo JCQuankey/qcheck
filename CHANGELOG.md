@@ -3,6 +3,27 @@
 All notable changes to qcheck (`qcheck-quantum` on PyPI). This project follows
 semantic versioning.
 
+## 0.10.1
+
+Security fix for the safety screen.
+
+### Fixed
+- **Builtins-namespace bypasses now flag unsafe.** Indirect access to dangerous
+  builtins through the builtins namespace previously slipped past the safety
+  screen; all four forms now flag `PY-UNSAFE-CALL`:
+  - `__builtins__['open'](...)` (subscript, including a non-constant key)
+  - `getattr(__builtins__, 'open')(...)`
+  - `import builtins; builtins.open(...)`
+  - `from builtins import open as o; o(...)`
+  `builtins` is now in the unsafe-module set. Benign receiver-aware calls
+  (`backend.run`, `counts.get`) stay clean; direct `eval`/`exec`/`__import__`
+  still flag as before. The safety screen is documented as a denylist, not a
+  sandbox.
+
+### Unchanged
+- 50 rules; JSON/SARIF 2.1.0, exit codes, suppression and the safety floor are
+  backward compatible. Zero runtime dependencies.
+
 ## 0.10.0
 
 qcheck 0.10.0 is a trust and CI-usability release: finding suppression with a
