@@ -10,7 +10,10 @@ def detect_framework(path: str, text: str) -> str:
     ext = os.path.splitext(path)[1].lower()
     low = text.lower()
 
-    if ext == ".qasm" or "openqasm" in low:
+    # A .py file is Python, full stop: a docstring that merely mentions
+    # OpenQASM (as qiskit's own sources do) must never route it to the QASM
+    # parser. Content-based QASM detection applies only to non-.py inputs.
+    if ext != ".py" and (ext == ".qasm" or "openqasm" in low):
         if "openqasm 3" in low:
             return "qasm3"
         if "openqasm 2" in low:
