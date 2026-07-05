@@ -3,6 +3,36 @@
 All notable changes to qcheck (`qcheck-quantum` on PyPI). This project follows
 semantic versioning.
 
+## 0.9.0
+
+qcheck 0.9.0 adds a new review surface: **Cirq**. The catalog grows to 50 rules
+and now covers Qiskit, OpenQASM, PennyLane and Cirq - the four most common
+surfaces for AI-generated quantum code.
+
+### Added
+- **Cirq static review** (four new rules, catalog now 50):
+  - `CIRQ-MISSING-IMPORT` - `cirq.*` used without importing cirq.
+  - `CIRQ-MEASURE-NO-QUBITS` - `cirq.measure()` with no qubits (raises
+    ValueError in Cirq).
+  - `CIRQ-EMPTY-LINEQUBITS` - a literal `LineQubit.range(n <= 0)`; warning,
+    because the call is legal Cirq that yields an empty qubit list.
+  - `CIRQ-SAME-QUBIT-2Q` - a two-qubit gate given the same qubit twice
+    (Cirq raises "Duplicate qids").
+- Public Cirq snippet cases in the regression suite.
+
+### Improved
+- **Framework detection weighs import evidence above bare mentions**: a Qiskit
+  file whose docstring mentions Cirq stays on the Qiskit surface, and files
+  importing both qiskit and cirq route to the larger Qiskit rule set.
+- CLI description, `UNSUPPORTED` guidance and package metadata now name all
+  four supported surfaces.
+
+### Unchanged
+- `pip install qcheck-quantum`; the command and import package remain `qcheck`.
+- `qcheck verify` output, `--json` (single object and multi-file envelope),
+  `qcheck rules --json`, SARIF 2.1.0 and exit codes are backward compatible.
+- Zero runtime dependencies; qcheck reviews code without executing it.
+
 ## 0.8.0
 
 qcheck 0.8.0 adds a new review surface: **PennyLane**. The catalog grows to 46

@@ -1,3 +1,3 @@
 """qcheck - review LLM-generated quantum code (Qiskit / OpenQASM / PennyLane / Cirq) statically and safely."""
 
-__version__ = "0.8.0"
+__version__ = "0.9.0"
