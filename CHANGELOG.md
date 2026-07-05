@@ -3,6 +3,44 @@
 All notable changes to qcheck (`qcheck-quantum` on PyPI). This project follows
 semantic versioning.
 
+## 0.10.0
+
+qcheck 0.10.0 is a trust and CI-usability release: finding suppression with a
+hard safety floor, plus two measured false-positive fixes that make qcheck
+accurate on real-world code.
+
+### Added
+- **Finding suppression, counted and never silent**:
+  - inline, line-scoped: `# qcheck: ignore[RULE-ID]` (Python) and
+    `// qcheck: ignore[RULE-ID]` (OpenQASM), one or more comma-separated IDs;
+  - run-wide: `--disable RULE-ID` (repeatable; comma lists accepted; unknown
+    IDs warn and continue);
+  - `--no-inline-suppress` for agent loops that must not let reviewed code
+    influence its own review;
+  - additive `suppressed` count in single-file JSON, per-result, the
+    multi-file `summary`, and human output.
+  - **Safety floor**: `PY-UNSAFE-IMPORT`, `PY-UNSAFE-CALL` and
+    `QASM-SUSPICIOUS` are never suppressible by either mechanism;
+    `UNSUPPORTED` can be disabled from the CLI only (the mixed-repo hatch).
+- `tools/corpus_smoke.py` (repo tool, not in the package): measure qcheck
+  findings over a local corpus; see `docs/FALSE_POSITIVE_HARDENING.md`.
+
+### Fixed
+- **Framework routing**: a `.py` file whose docstring merely mentions
+  OpenQASM is no longer parsed as QASM (qiskit's own sources previously drew
+  thousands of bogus findings).
+- **Receiver-aware safety screen**: `.run()`/`.get()`-style calls are flagged
+  only when the receiver resolves to an unsafe module import, so
+  `backend.run(circuit)` and `counts.get(key)` no longer mark correct code
+  unsafe. The unsafe import itself still always flags, so the screen stays
+  closed.
+
+### Unchanged
+- `pip install qcheck-quantum`; the command and import package remain `qcheck`.
+- 50 rules across Qiskit, OpenQASM, PennyLane and Cirq; JSON/SARIF 2.1.0 and
+  exit codes backward compatible (`suppressed` is an additive field).
+- Zero runtime dependencies; qcheck reviews code without executing it.
+
 ## 0.9.0
 
 qcheck 0.9.0 adds a new review surface: **Cirq**. The catalog grows to 50 rules

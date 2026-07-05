@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: JCQuankey/qcheck@v0.9.0
+      - uses: JCQuankey/qcheck@v0.10.0
         with:
           # Review the whole repo; or a folder, e.g. "circuits/".
           paths: "."
