@@ -24,6 +24,7 @@ from .checks_pennylane import check_pennylane
 from .checks_cirq import check_cirq
 from .safety import scan_python_safety
 from .sarif import build_sarif
+from .suppress import apply_suppressions, UNSUPPRESSIBLE
 from . import rules as rule_catalog
 
 EXIT_PASS = 0
@@ -32,7 +33,14 @@ EXIT_UNSAFE = 2
 EXIT_INTERNAL = 3
 
 
-def verify_text(path: str, text: str) -> Report:
+def verify_text(path: str, text: str, disabled=frozenset(),
+                no_inline_suppress: bool = False) -> Report:
+    report = _verify_text_raw(path, text)
+    return apply_suppressions(report, text, disabled=frozenset(disabled),
+                              no_inline=no_inline_suppress)
+
+
+def _verify_text_raw(path: str, text: str) -> Report:
     framework = detect_framework(path, text)
 
     if framework in ("qasm2", "qasm3"):
@@ -110,6 +118,9 @@ def _print_human(report: Report, path: str) -> None:
     for f in report.findings:
         loc = f" (line {f.line})" if f.line else ""
         print(f"  [{f.level}] {f.id}: {f.message}{loc}")
+    if report.suppressed:
+        print(f"  {report.suppressed} finding(s) suppressed "
+              f"(inline ignore / --disable).")
     for fix in report.suggested_fixes:
         print(f"  fix -> {fix}")
 
@@ -166,14 +177,18 @@ def _detect_name(display: str, text: str, lang: Optional[str]) -> str:
     return display
 
 
-def _verify_one(display: str, lang: Optional[str], stdin_text: Optional[str]) -> Tuple[str, Optional[Report], Optional[str]]:
+def _verify_one(display: str, lang: Optional[str], stdin_text: Optional[str],
+                disabled=frozenset(), no_inline_suppress: bool = False
+                ) -> Tuple[str, Optional[Report], Optional[str]]:
     """Return (display, report, read_error)."""
     try:
         text = stdin_text if display == "-" else open(display, "r", encoding="utf-8").read()
     except OSError as e:
         return (display, None, f"cannot read {display}: {e}")
     try:
-        return (display, verify_text(_detect_name(display, text, lang), text), None)
+        return (display, verify_text(_detect_name(display, text, lang), text,
+                                     disabled=disabled,
+                                     no_inline_suppress=no_inline_suppress), None)
     except Exception as e:  # never crash on one bad file
         return (display, None, f"internal error: {e}")
 
@@ -236,6 +251,14 @@ def main(argv: Optional[List[str]] = None) -> int:
                                "(used with --format sarif)")
     p_verify.add_argument("--lang", choices=sorted(_LANG_EXT),
                           help="force language for stdin input")
+    p_verify.add_argument("--disable", action="append", default=[],
+                          metavar="RULE-ID",
+                          help="suppress a rule for this run (repeatable; "
+                               "comma lists accepted). Safety rules cannot "
+                               "be disabled.")
+    p_verify.add_argument("--no-inline-suppress", action="store_true",
+                          help="ignore inline 'qcheck: ignore[...]' comments "
+                               "(for agent loops reviewing untrusted code)")
 
     p_rules = sub.add_parser("rules", help="list qcheck's rule catalog")
     p_rules.add_argument("--json", action="store_true",
@@ -258,13 +281,29 @@ def main(argv: Optional[List[str]] = None) -> int:
         fmt = "human"
     emit_json = fmt == "json"
 
+    # Resolve --disable: comma lists accepted; unknown ids warn (CI pins
+    # flag lists across versions); safety rules are refused outright.
+    disabled = frozenset(p.strip().upper()
+                         for chunk in args.disable
+                         for p in chunk.split(",") if p.strip())
+    refused = sorted(disabled & UNSUPPRESSIBLE)
+    if refused:
+        print(f"qcheck: refusing to disable safety rule(s): "
+              f"{', '.join(refused)}", file=sys.stderr)
+        return EXIT_INTERNAL
+    for rid in sorted(disabled):
+        if not rule_catalog.known(rid):
+            print(f"qcheck: warning: --disable {rid} does not match any "
+                  f"known rule (see `qcheck rules`).", file=sys.stderr)
+
     targets = _expand_targets(args.paths)
     if not targets:
         print("qcheck: no .py or .qasm files found.", file=sys.stderr)
         return EXIT_PASS
 
     stdin_text = sys.stdin.read() if "-" in targets else None
-    units = [_verify_one(t, args.lang, stdin_text) for t in targets]
+    units = [_verify_one(t, args.lang, stdin_text, disabled,
+                         args.no_inline_suppress) for t in targets]
 
     # SARIF: a single-run document over all units, regardless of count.
     if fmt == "sarif":
@@ -320,15 +359,18 @@ def main(argv: Optional[List[str]] = None) -> int:
             print(f"  [{icon}] {display} ({report.framework})"
                   + (f"  {errs} error(s)" if errs else ""))
 
+    total_suppressed = sum(r.suppressed for _d, r, e in units if r is not None)
     summary = {"files": len(units), "passed": passed, "failed": failed,
-               "unsafe": unsafe, "read_errors": err_count}
+               "unsafe": unsafe, "read_errors": err_count,
+               "suppressed": total_suppressed}
     if emit_json:
         print(json.dumps({"qcheck_version": __version__, "results": results,
                           "summary": summary}, indent=2))
     else:
         print(f"qcheck {__version__}: {summary['files']} file(s) - "
               f"{passed} passed, {failed} failed, {unsafe} unsafe"
-              + (f", {err_count} unreadable" if err_count else ""))
+              + (f", {err_count} unreadable" if err_count else "")
+              + (f", {total_suppressed} suppressed" if total_suppressed else ""))
     return worst
 
 
