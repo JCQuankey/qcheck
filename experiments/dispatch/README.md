@@ -77,3 +77,23 @@ No installation or network needed for the experiment. Synthetic findings cannot
 establish demand, real savings, production safety, margin, learning or quantum
 advantage. Next technical gate is an independently formulated strong classical
 baseline at larger scale, with the same constraints and full time accounting.
+
+## Recorded execution (2026-09-07)
+
+`results/2026-09-07.json` records the initial experiment at `c37b2bc`.
+Independent review subsequently found that historical service overlaps were not
+checked. Four independently authored frozen regression tests reproduced the
+defect (two failed, two adjacent-interval controls passed). `66d9612` fixes it
+without changing those tests. Full suite after correction: 313 tests passed.
+
+`results/2026-09-07-verified.json` is the corrected-code evidence: seeds 101..110
+are now regression reruns, not untouched evaluation. New seeds 201..210 were
+evaluated after the safety fix, with no subsequent tuning. To reproduce:
+
+```sh
+python -c 'import json; from experiments.dispatch.benchmark import run; print(json.dumps(run(tuple(range(201, 211))), indent=2))'
+```
+
+The exact reference and control both use the checker, so independent adversarial
+tests, not their agreement, establish the tested constraint behavior. Benchmark
+seeds are now public; reserve fresh seeds before subsequent optimization work.
