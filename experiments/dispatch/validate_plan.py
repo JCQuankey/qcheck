@@ -46,6 +46,13 @@ def check_plan(case, plan):
             changes += a["technician"] != old["technician"]
             shift += abs(a["start"] - old["start"])
     for tech_id, tech in techs.items():
+        # Historical travel is unavailable, but service intervals are known.
+        # Check ALL service intervals before filtering the future travel route.
+        service = sorted((a for a in assignments.values() if a["technician"] == tech_id),
+                         key=lambda a: (a["start"], a["job"]))
+        for previous, following in zip(service, service[1:]):
+            if following["start"] < previous["start"] + jobs[previous["job"]]["duration"]:
+                errors.append("SERVICE_OVERLAP")
         route = sorted((a for a in assignments.values()
                         if a["technician"] == tech_id and jobs[a["job"]]["state"] != "completed"),
                        key=lambda a: (a["start"], a["job"]))
