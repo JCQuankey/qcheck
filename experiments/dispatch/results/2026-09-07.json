@@ -1,0 +1,1713 @@
+{
+  "development": {
+    "data": "SYNTHETIC_NOT_CUSTOMER_DATA",
+    "python": "3.12.13",
+    "candidate_budget_per_solver": 250000,
+    "timing": "local monotonic wall clock; includes validation, not remote queues",
+    "cost_eur": null,
+    "commercial_validation": "NOT_TESTED",
+    "strong_baseline": "STRONG_BASELINE_NOT_TESTED",
+    "quantum": "QUANTUM_NOT_TESTED",
+    "rows": [
+      {
+        "seed": 11,
+        "event": "duration",
+        "input_sha256": "8f71c6c1e052d88d6b7c013c23f2727f9cc9026e3fd2fa85f24f733d97ae470a",
+        "original_plan_before_event": {
+          "feasible": true,
+          "errors": [],
+          "objective": [
+            0,
+            0,
+            0,
+            0,
+            10,
+            1
+          ],
+          "unassigned": [],
+          "metrics": {
+            "critical_unassigned": 0,
+            "other_unassigned": 0,
+            "technician_changes": 0,
+            "start_shift_minutes": 0,
+            "travel_minutes": 10,
+            "wait_minutes": 1,
+            "current_cancellations": 0
+          },
+          "history_travel": "NOT_VERIFIABLE_FROM_SNAPSHOT"
+        },
+        "original_plan_after_event": {
+          "feasible": true,
+          "errors": [],
+          "objective": [
+            0,
+            0,
+            0,
+            0,
+            10,
+            1
+          ],
+          "unassigned": [],
+          "metrics": {
+            "critical_unassigned": 0,
+            "other_unassigned": 0,
+            "technician_changes": 0,
+            "start_shift_minutes": 0,
+            "travel_minutes": 10,
+            "wait_minutes": 1,
+            "current_cancellations": 0
+          },
+          "history_travel": "NOT_VERIFIABLE_FROM_SNAPSHOT"
+        },
+        "exact": {
+          "status": "FEASIBLE",
+          "optimal": true,
+          "search_exhausted": true,
+          "candidates": 169,
+          "plan": [
+            {
+              "job": "j0",
+              "technician": "t0",
+              "start": 3
+            },
+            {
+              "job": "j1",
+              "technician": "t1",
+              "start": 3
+            }
+          ],
+          "evaluation": {
+            "feasible": true,
+            "errors": [],
+            "objective": [
+              0,
+              0,
+              0,
+              0,
+              10,
+              1
+            ],
+            "unassigned": [],
+            "metrics": {
+              "critical_unassigned": 0,
+              "other_unassigned": 0,
+              "technician_changes": 0,
+              "start_shift_minutes": 0,
+              "travel_minutes": 10,
+              "wait_minutes": 1,
+              "current_cancellations": 0
+            },
+            "history_travel": "NOT_VERIFIABLE_FROM_SNAPSHOT"
+          },
+          "wall_seconds": 0.0059972320013912395
+        },
+        "control": {
+          "status": "FEASIBLE",
+          "optimal": false,
+          "plan": [
+            {
+              "job": "j0",
+              "technician": "t0",
+              "start": 3
+            },
+            {
+              "job": "j1",
+              "technician": "t1",
+              "start": 3
+            }
+          ],
+          "evaluation": {
+            "feasible": true,
+            "errors": [],
+            "objective": [
+              0,
+              0,
+              0,
+              0,
+              10,
+              1
+            ],
+            "unassigned": [],
+            "metrics": {
+              "critical_unassigned": 0,
+              "other_unassigned": 0,
+              "technician_changes": 0,
+              "start_shift_minutes": 0,
+              "travel_minutes": 10,
+              "wait_minutes": 1,
+              "current_cancellations": 0
+            },
+            "history_travel": "NOT_VERIFIABLE_FROM_SNAPSHOT"
+          },
+          "budget_exhausted": false,
+          "candidates": 24,
+          "wall_seconds": 0.0008327479954459704
+        },
+        "total_wall_seconds": 0.007561708000139333
+      },
+      {
+        "seed": 12,
+        "event": "absence",
+        "input_sha256": "5940c8c44c37f70ce7106edda1f9c2f8ab0a2336a7c5635d5c7c89b7fcccb56b",
+        "original_plan_before_event": {
+          "feasible": true,
+          "errors": [],
+          "objective": [
+            0,
+            0,
+            0,
+            0,
+            10,
+            1
+          ],
+          "unassigned": [],
+          "metrics": {
+            "critical_unassigned": 0,
+            "other_unassigned": 0,
+            "technician_changes": 0,
+            "start_shift_minutes": 0,
+            "travel_minutes": 10,
+            "wait_minutes": 1,
+            "current_cancellations": 0
+          },
+          "history_travel": "NOT_VERIFIABLE_FROM_SNAPSHOT"
+        },
+        "original_plan_after_event": {
+          "feasible": false,
+          "errors": [
+            "UNAVAILABLE"
+          ],
+          "objective": [
+            0,
+            0,
+            0,
+            0,
+            10,
+            1
+          ],
+          "unassigned": [],
+          "metrics": {
+            "critical_unassigned": 0,
+            "other_unassigned": 0,
+            "technician_changes": 0,
+            "start_shift_minutes": 0,
+            "travel_minutes": 10,
+            "wait_minutes": 1,
+            "current_cancellations": 0
+          },
+          "history_travel": "NOT_VERIFIABLE_FROM_SNAPSHOT"
+        },
+        "exact": {
+          "status": "FEASIBLE",
+          "optimal": true,
+          "search_exhausted": true,
+          "candidates": 99,
+          "plan": [
+            {
+              "job": "j1",
+              "technician": "t1",
+              "start": 3
+            }
+          ],
+          "evaluation": {
+            "feasible": true,
+            "errors": [],
+            "objective": [
+              0,
+              1,
+              0,
+              0,
+              4,
+              1
+            ],
+            "unassigned": [
+              {
+                "job": "j0",
+                "reason": "NOT_SELECTED_NOT_PROVEN_IMPOSSIBLE"
+              }
+            ],
+            "metrics": {
+              "critical_unassigned": 0,
+              "other_unassigned": 1,
+              "technician_changes": 0,
+              "start_shift_minutes": 0,
+              "travel_minutes": 4,
+              "wait_minutes": 1,
+              "current_cancellations": 1
+            },
+            "history_travel": "NOT_VERIFIABLE_FROM_SNAPSHOT"
+          },
+          "wall_seconds": 0.003680832000100054
+        },
+        "control": {
+          "status": "FEASIBLE",
+          "optimal": false,
+          "plan": [
+            {
+              "job": "j1",
+              "technician": "t1",
+              "start": 3
+            }
+          ],
+          "evaluation": {
+            "feasible": true,
+            "errors": [],
+            "objective": [
+              0,
+              1,
+              0,
+              0,
+              4,
+              1
+            ],
+            "unassigned": [
+              {
+                "job": "j0",
+                "reason": "NOT_SELECTED_NOT_PROVEN_IMPOSSIBLE"
+              }
+            ],
+            "metrics": {
+              "critical_unassigned": 0,
+              "other_unassigned": 1,
+              "technician_changes": 0,
+              "start_shift_minutes": 0,
+              "travel_minutes": 4,
+              "wait_minutes": 1,
+              "current_cancellations": 1
+            },
+            "history_travel": "NOT_VERIFIABLE_FROM_SNAPSHOT"
+          },
+          "budget_exhausted": false,
+          "candidates": 18,
+          "wall_seconds": 0.0006511140018119477
+        },
+        "total_wall_seconds": 0.004699408003943972
+      }
+    ]
+  },
+  "evaluation": {
+    "data": "SYNTHETIC_NOT_CUSTOMER_DATA",
+    "python": "3.12.13",
+    "candidate_budget_per_solver": 250000,
+    "timing": "local monotonic wall clock; includes validation, not remote queues",
+    "cost_eur": null,
+    "commercial_validation": "NOT_TESTED",
+    "strong_baseline": "STRONG_BASELINE_NOT_TESTED",
+    "quantum": "QUANTUM_NOT_TESTED",
+    "rows": [
+      {
+        "seed": 101,
+        "event": "duration",
+        "input_sha256": "e12461771d1bd34f3803f58c0b8857b1e4850a45e067b5d40fee0e37e495a5b9",
+        "original_plan_before_event": {
+          "feasible": true,
+          "errors": [],
+          "objective": [
+            0,
+            0,
+            0,
+            0,
+            10,
+            1
+          ],
+          "unassigned": [],
+          "metrics": {
+            "critical_unassigned": 0,
+            "other_unassigned": 0,
+            "technician_changes": 0,
+            "start_shift_minutes": 0,
+            "travel_minutes": 10,
+            "wait_minutes": 1,
+            "current_cancellations": 0
+          },
+          "history_travel": "NOT_VERIFIABLE_FROM_SNAPSHOT"
+        },
+        "original_plan_after_event": {
+          "feasible": true,
+          "errors": [],
+          "objective": [
+            0,
+            0,
+            0,
+            0,
+            10,
+            1
+          ],
+          "unassigned": [],
+          "metrics": {
+            "critical_unassigned": 0,
+            "other_unassigned": 0,
+            "technician_changes": 0,
+            "start_shift_minutes": 0,
+            "travel_minutes": 10,
+            "wait_minutes": 1,
+            "current_cancellations": 0
+          },
+          "history_travel": "NOT_VERIFIABLE_FROM_SNAPSHOT"
+        },
+        "exact": {
+          "status": "FEASIBLE",
+          "optimal": true,
+          "search_exhausted": true,
+          "candidates": 117,
+          "plan": [
+            {
+              "job": "j0",
+              "technician": "t0",
+              "start": 3
+            },
+            {
+              "job": "j1",
+              "technician": "t1",
+              "start": 3
+            }
+          ],
+          "evaluation": {
+            "feasible": true,
+            "errors": [],
+            "objective": [
+              0,
+              0,
+              0,
+              0,
+              10,
+              1
+            ],
+            "unassigned": [],
+            "metrics": {
+              "critical_unassigned": 0,
+              "other_unassigned": 0,
+              "technician_changes": 0,
+              "start_shift_minutes": 0,
+              "travel_minutes": 10,
+              "wait_minutes": 1,
+              "current_cancellations": 0
+            },
+            "history_travel": "NOT_VERIFIABLE_FROM_SNAPSHOT"
+          },
+          "wall_seconds": 0.004506607998337131
+        },
+        "control": {
+          "status": "FEASIBLE",
+          "optimal": false,
+          "plan": [
+            {
+              "job": "j1",
+              "technician": "t1",
+              "start": 3
+            },
+            {
+              "job": "j0",
+              "technician": "t0",
+              "start": 3
+            }
+          ],
+          "evaluation": {
+            "feasible": true,
+            "errors": [],
+            "objective": [
+              0,
+              0,
+              0,
+              0,
+              10,
+              1
+            ],
+            "unassigned": [],
+            "metrics": {
+              "critical_unassigned": 0,
+              "other_unassigned": 0,
+              "technician_changes": 0,
+              "start_shift_minutes": 0,
+              "travel_minutes": 10,
+              "wait_minutes": 1,
+              "current_cancellations": 0
+            },
+            "history_travel": "NOT_VERIFIABLE_FROM_SNAPSHOT"
+          },
+          "budget_exhausted": false,
+          "candidates": 20,
+          "wall_seconds": 0.0007405810029013082
+        },
+        "total_wall_seconds": 0.005645637997076847
+      },
+      {
+        "seed": 102,
+        "event": "absence",
+        "input_sha256": "56b7e997e915d643791052f8ef077e78fe8b95f10b66d691ea17215f24293f70",
+        "original_plan_before_event": {
+          "feasible": true,
+          "errors": [],
+          "objective": [
+            0,
+            0,
+            0,
+            0,
+            12,
+            0
+          ],
+          "unassigned": [],
+          "metrics": {
+            "critical_unassigned": 0,
+            "other_unassigned": 0,
+            "technician_changes": 0,
+            "start_shift_minutes": 0,
+            "travel_minutes": 12,
+            "wait_minutes": 0,
+            "current_cancellations": 0
+          },
+          "history_travel": "NOT_VERIFIABLE_FROM_SNAPSHOT"
+        },
+        "original_plan_after_event": {
+          "feasible": false,
+          "errors": [
+            "UNAVAILABLE"
+          ],
+          "objective": [
+            0,
+            0,
+            0,
+            0,
+            12,
+            0
+          ],
+          "unassigned": [],
+          "metrics": {
+            "critical_unassigned": 0,
+            "other_unassigned": 0,
+            "technician_changes": 0,
+            "start_shift_minutes": 0,
+            "travel_minutes": 12,
+            "wait_minutes": 0,
+            "current_cancellations": 0
+          },
+          "history_travel": "NOT_VERIFIABLE_FROM_SNAPSHOT"
+        },
+        "exact": {
+          "status": "FEASIBLE",
+          "optimal": true,
+          "search_exhausted": true,
+          "candidates": 117,
+          "plan": [
+            {
+              "job": "j0",
+              "technician": "t1",
+              "start": 6
+            },
+            {
+              "job": "j1",
+              "technician": "t1",
+              "start": 3
+            }
+          ],
+          "evaluation": {
+            "feasible": true,
+            "errors": [],
+            "objective": [
+              0,
+              0,
+              1,
+              3,
+              6,
+              0
+            ],
+            "unassigned": [],
+            "metrics": {
+              "critical_unassigned": 0,
+              "other_unassigned": 0,
+              "technician_changes": 1,
+              "start_shift_minutes": 3,
+              "travel_minutes": 6,
+              "wait_minutes": 0,
+              "current_cancellations": 0
+            },
+            "history_travel": "NOT_VERIFIABLE_FROM_SNAPSHOT"
+          },
+          "wall_seconds": 0.003916906003723852
+        },
+        "control": {
+          "status": "FEASIBLE",
+          "optimal": false,
+          "plan": [
+            {
+              "job": "j1",
+              "technician": "t1",
+              "start": 3
+            },
+            {
+              "job": "j0",
+              "technician": "t1",
+              "start": 6
+            }
+          ],
+          "evaluation": {
+            "feasible": true,
+            "errors": [],
+            "objective": [
+              0,
+              0,
+              1,
+              3,
+              6,
+              0
+            ],
+            "unassigned": [],
+            "metrics": {
+              "critical_unassigned": 0,
+              "other_unassigned": 0,
+              "technician_changes": 1,
+              "start_shift_minutes": 3,
+              "travel_minutes": 6,
+              "wait_minutes": 0,
+              "current_cancellations": 0
+            },
+            "history_travel": "NOT_VERIFIABLE_FROM_SNAPSHOT"
+          },
+          "budget_exhausted": false,
+          "candidates": 20,
+          "wall_seconds": 0.0007024419974186458
+        },
+        "total_wall_seconds": 0.004984104001778178
+      },
+      {
+        "seed": 103,
+        "event": "urgent",
+        "input_sha256": "2a1d091234c845b07186deb6909c253a7115ce3c709899e49a1fb15f1313ba3f",
+        "original_plan_before_event": {
+          "feasible": true,
+          "errors": [],
+          "objective": [
+            0,
+            0,
+            0,
+            0,
+            8,
+            2
+          ],
+          "unassigned": [],
+          "metrics": {
+            "critical_unassigned": 0,
+            "other_unassigned": 0,
+            "technician_changes": 0,
+            "start_shift_minutes": 0,
+            "travel_minutes": 8,
+            "wait_minutes": 2,
+            "current_cancellations": 0
+          },
+          "history_travel": "NOT_VERIFIABLE_FROM_SNAPSHOT"
+        },
+        "original_plan_after_event": {
+          "feasible": true,
+          "errors": [],
+          "objective": [
+            1,
+            0,
+            0,
+            0,
+            8,
+            2
+          ],
+          "unassigned": [
+            {
+              "job": "urgent",
+              "reason": "NOT_SELECTED_NOT_PROVEN_IMPOSSIBLE"
+            }
+          ],
+          "metrics": {
+            "critical_unassigned": 1,
+            "other_unassigned": 0,
+            "technician_changes": 0,
+            "start_shift_minutes": 0,
+            "travel_minutes": 8,
+            "wait_minutes": 2,
+            "current_cancellations": 0
+          },
+          "history_travel": "NOT_VERIFIABLE_FROM_SNAPSHOT"
+        },
+        "exact": {
+          "status": "FEASIBLE",
+          "optimal": true,
+          "search_exhausted": true,
+          "candidates": 1183,
+          "plan": [
+            {
+              "job": "j0",
+              "technician": "t0",
+              "start": 6
+            },
+            {
+              "job": "j1",
+              "technician": "t1",
+              "start": 3
+            },
+            {
+              "job": "urgent",
+              "technician": "t0",
+              "start": 3
+            }
+          ],
+          "evaluation": {
+            "feasible": true,
+            "errors": [],
+            "objective": [
+              0,
+              0,
+              0,
+              3,
+              8,
+              2
+            ],
+            "unassigned": [],
+            "metrics": {
+              "critical_unassigned": 0,
+              "other_unassigned": 0,
+              "technician_changes": 0,
+              "start_shift_minutes": 3,
+              "travel_minutes": 8,
+              "wait_minutes": 2,
+              "current_cancellations": 0
+            },
+            "history_travel": "NOT_VERIFIABLE_FROM_SNAPSHOT"
+          },
+          "wall_seconds": 0.04511531400203239
+        },
+        "control": {
+          "status": "FEASIBLE",
+          "optimal": false,
+          "plan": [
+            {
+              "job": "urgent",
+              "technician": "t0",
+              "start": 3
+            },
+            {
+              "job": "j0",
+              "technician": "t0",
+              "start": 6
+            },
+            {
+              "job": "j1",
+              "technician": "t1",
+              "start": 3
+            }
+          ],
+          "evaluation": {
+            "feasible": true,
+            "errors": [],
+            "objective": [
+              0,
+              0,
+              0,
+              3,
+              8,
+              2
+            ],
+            "unassigned": [],
+            "metrics": {
+              "critical_unassigned": 0,
+              "other_unassigned": 0,
+              "technician_changes": 0,
+              "start_shift_minutes": 3,
+              "travel_minutes": 8,
+              "wait_minutes": 2,
+              "current_cancellations": 0
+            },
+            "history_travel": "NOT_VERIFIABLE_FROM_SNAPSHOT"
+          },
+          "budget_exhausted": false,
+          "candidates": 30,
+          "wall_seconds": 0.0011987719990429468
+        },
+        "total_wall_seconds": 0.046762379999563564
+      },
+      {
+        "seed": 104,
+        "event": "duration",
+        "input_sha256": "9f3fbe9e9b0607240e4f1d4d466c256edec52ddd05fab4d49e0bf2830a59def4",
+        "original_plan_before_event": {
+          "feasible": true,
+          "errors": [],
+          "objective": [
+            0,
+            0,
+            0,
+            0,
+            10,
+            1
+          ],
+          "unassigned": [],
+          "metrics": {
+            "critical_unassigned": 0,
+            "other_unassigned": 0,
+            "technician_changes": 0,
+            "start_shift_minutes": 0,
+            "travel_minutes": 10,
+            "wait_minutes": 1,
+            "current_cancellations": 0
+          },
+          "history_travel": "NOT_VERIFIABLE_FROM_SNAPSHOT"
+        },
+        "original_plan_after_event": {
+          "feasible": true,
+          "errors": [],
+          "objective": [
+            0,
+            0,
+            0,
+            0,
+            10,
+            1
+          ],
+          "unassigned": [],
+          "metrics": {
+            "critical_unassigned": 0,
+            "other_unassigned": 0,
+            "technician_changes": 0,
+            "start_shift_minutes": 0,
+            "travel_minutes": 10,
+            "wait_minutes": 1,
+            "current_cancellations": 0
+          },
+          "history_travel": "NOT_VERIFIABLE_FROM_SNAPSHOT"
+        },
+        "exact": {
+          "status": "FEASIBLE",
+          "optimal": true,
+          "search_exhausted": true,
+          "candidates": 99,
+          "plan": [
+            {
+              "job": "j0",
+              "technician": "t0",
+              "start": 3
+            },
+            {
+              "job": "j1",
+              "technician": "t1",
+              "start": 3
+            }
+          ],
+          "evaluation": {
+            "feasible": true,
+            "errors": [],
+            "objective": [
+              0,
+              0,
+              0,
+              0,
+              10,
+              1
+            ],
+            "unassigned": [],
+            "metrics": {
+              "critical_unassigned": 0,
+              "other_unassigned": 0,
+              "technician_changes": 0,
+              "start_shift_minutes": 0,
+              "travel_minutes": 10,
+              "wait_minutes": 1,
+              "current_cancellations": 0
+            },
+            "history_travel": "NOT_VERIFIABLE_FROM_SNAPSHOT"
+          },
+          "wall_seconds": 0.0032033370007411577
+        },
+        "control": {
+          "status": "FEASIBLE",
+          "optimal": false,
+          "plan": [
+            {
+              "job": "j0",
+              "technician": "t0",
+              "start": 3
+            },
+            {
+              "job": "j1",
+              "technician": "t1",
+              "start": 3
+            }
+          ],
+          "evaluation": {
+            "feasible": true,
+            "errors": [],
+            "objective": [
+              0,
+              0,
+              0,
+              0,
+              10,
+              1
+            ],
+            "unassigned": [],
+            "metrics": {
+              "critical_unassigned": 0,
+              "other_unassigned": 0,
+              "technician_changes": 0,
+              "start_shift_minutes": 0,
+              "travel_minutes": 10,
+              "wait_minutes": 1,
+              "current_cancellations": 0
+            },
+            "history_travel": "NOT_VERIFIABLE_FROM_SNAPSHOT"
+          },
+          "budget_exhausted": false,
+          "candidates": 18,
+          "wall_seconds": 0.0006670769944321364
+        },
+        "total_wall_seconds": 0.004240570997353643
+      },
+      {
+        "seed": 105,
+        "event": "absence",
+        "input_sha256": "d817991fe6ced4a6070ccb6cd5cfe3abb8f52ef40a116d08e84d4afb07af0f0e",
+        "original_plan_before_event": {
+          "feasible": true,
+          "errors": [],
+          "objective": [
+            0,
+            0,
+            0,
+            0,
+            8,
+            2
+          ],
+          "unassigned": [],
+          "metrics": {
+            "critical_unassigned": 0,
+            "other_unassigned": 0,
+            "technician_changes": 0,
+            "start_shift_minutes": 0,
+            "travel_minutes": 8,
+            "wait_minutes": 2,
+            "current_cancellations": 0
+          },
+          "history_travel": "NOT_VERIFIABLE_FROM_SNAPSHOT"
+        },
+        "original_plan_after_event": {
+          "feasible": false,
+          "errors": [
+            "UNAVAILABLE"
+          ],
+          "objective": [
+            0,
+            0,
+            0,
+            0,
+            8,
+            2
+          ],
+          "unassigned": [],
+          "metrics": {
+            "critical_unassigned": 0,
+            "other_unassigned": 0,
+            "technician_changes": 0,
+            "start_shift_minutes": 0,
+            "travel_minutes": 8,
+            "wait_minutes": 2,
+            "current_cancellations": 0
+          },
+          "history_travel": "NOT_VERIFIABLE_FROM_SNAPSHOT"
+        },
+        "exact": {
+          "status": "FEASIBLE",
+          "optimal": true,
+          "search_exhausted": true,
+          "candidates": 143,
+          "plan": [
+            {
+              "job": "j1",
+              "technician": "t1",
+              "start": 3
+            }
+          ],
+          "evaluation": {
+            "feasible": true,
+            "errors": [],
+            "objective": [
+              0,
+              1,
+              0,
+              0,
+              6,
+              0
+            ],
+            "unassigned": [
+              {
+                "job": "j0",
+                "reason": "NOT_SELECTED_NOT_PROVEN_IMPOSSIBLE"
+              }
+            ],
+            "metrics": {
+              "critical_unassigned": 0,
+              "other_unassigned": 1,
+              "technician_changes": 0,
+              "start_shift_minutes": 0,
+              "travel_minutes": 6,
+              "wait_minutes": 0,
+              "current_cancellations": 1
+            },
+            "history_travel": "NOT_VERIFIABLE_FROM_SNAPSHOT"
+          },
+          "wall_seconds": 0.005001416997401975
+        },
+        "control": {
+          "status": "FEASIBLE",
+          "optimal": false,
+          "plan": [
+            {
+              "job": "j1",
+              "technician": "t1",
+              "start": 3
+            }
+          ],
+          "evaluation": {
+            "feasible": true,
+            "errors": [],
+            "objective": [
+              0,
+              1,
+              0,
+              0,
+              6,
+              0
+            ],
+            "unassigned": [
+              {
+                "job": "j0",
+                "reason": "NOT_SELECTED_NOT_PROVEN_IMPOSSIBLE"
+              }
+            ],
+            "metrics": {
+              "critical_unassigned": 0,
+              "other_unassigned": 1,
+              "technician_changes": 0,
+              "start_shift_minutes": 0,
+              "travel_minutes": 6,
+              "wait_minutes": 0,
+              "current_cancellations": 1
+            },
+            "history_travel": "NOT_VERIFIABLE_FROM_SNAPSHOT"
+          },
+          "budget_exhausted": false,
+          "candidates": 22,
+          "wall_seconds": 0.0008013520055101253
+        },
+        "total_wall_seconds": 0.006156472998554818
+      },
+      {
+        "seed": 106,
+        "event": "urgent",
+        "input_sha256": "3fd57f50712fb5778c1f07fae4dfc0ceea7eaad5b3237d4fe3ca6a263c77409f",
+        "original_plan_before_event": {
+          "feasible": true,
+          "errors": [],
+          "objective": [
+            0,
+            0,
+            0,
+            0,
+            10,
+            1
+          ],
+          "unassigned": [],
+          "metrics": {
+            "critical_unassigned": 0,
+            "other_unassigned": 0,
+            "technician_changes": 0,
+            "start_shift_minutes": 0,
+            "travel_minutes": 10,
+            "wait_minutes": 1,
+            "current_cancellations": 0
+          },
+          "history_travel": "NOT_VERIFIABLE_FROM_SNAPSHOT"
+        },
+        "original_plan_after_event": {
+          "feasible": true,
+          "errors": [],
+          "objective": [
+            1,
+            0,
+            0,
+            0,
+            10,
+            1
+          ],
+          "unassigned": [
+            {
+              "job": "urgent",
+              "reason": "NOT_SELECTED_NOT_PROVEN_IMPOSSIBLE"
+            }
+          ],
+          "metrics": {
+            "critical_unassigned": 1,
+            "other_unassigned": 0,
+            "technician_changes": 0,
+            "start_shift_minutes": 0,
+            "travel_minutes": 10,
+            "wait_minutes": 1,
+            "current_cancellations": 0
+          },
+          "history_travel": "NOT_VERIFIABLE_FROM_SNAPSHOT"
+        },
+        "exact": {
+          "status": "FEASIBLE",
+          "optimal": true,
+          "search_exhausted": true,
+          "candidates": 567,
+          "plan": [
+            {
+              "job": "j1",
+              "technician": "t1",
+              "start": 3
+            },
+            {
+              "job": "urgent",
+              "technician": "t0",
+              "start": 3
+            }
+          ],
+          "evaluation": {
+            "feasible": true,
+            "errors": [],
+            "objective": [
+              0,
+              1,
+              0,
+              0,
+              10,
+              1
+            ],
+            "unassigned": [
+              {
+                "job": "j0",
+                "reason": "NOT_SELECTED_NOT_PROVEN_IMPOSSIBLE"
+              }
+            ],
+            "metrics": {
+              "critical_unassigned": 0,
+              "other_unassigned": 1,
+              "technician_changes": 0,
+              "start_shift_minutes": 0,
+              "travel_minutes": 10,
+              "wait_minutes": 1,
+              "current_cancellations": 1
+            },
+            "history_travel": "NOT_VERIFIABLE_FROM_SNAPSHOT"
+          },
+          "wall_seconds": 0.021198580994678196
+        },
+        "control": {
+          "status": "FEASIBLE",
+          "optimal": false,
+          "plan": [
+            {
+              "job": "urgent",
+              "technician": "t0",
+              "start": 3
+            },
+            {
+              "job": "j0",
+              "technician": "t1",
+              "start": 3
+            }
+          ],
+          "evaluation": {
+            "feasible": true,
+            "errors": [],
+            "objective": [
+              0,
+              1,
+              1,
+              0,
+              12,
+              0
+            ],
+            "unassigned": [
+              {
+                "job": "j1",
+                "reason": "NOT_SELECTED_NOT_PROVEN_IMPOSSIBLE"
+              }
+            ],
+            "metrics": {
+              "critical_unassigned": 0,
+              "other_unassigned": 1,
+              "technician_changes": 1,
+              "start_shift_minutes": 0,
+              "travel_minutes": 12,
+              "wait_minutes": 0,
+              "current_cancellations": 1
+            },
+            "history_travel": "NOT_VERIFIABLE_FROM_SNAPSHOT"
+          },
+          "budget_exhausted": false,
+          "candidates": 22,
+          "wall_seconds": 0.0008854789994074963
+        },
+        "total_wall_seconds": 0.022476741003629286
+      },
+      {
+        "seed": 107,
+        "event": "duration",
+        "input_sha256": "48454cf3fa934aae21c85e9e0605dc98a0cf527a81c65ad2bfa9bc66c2dffcb1",
+        "original_plan_before_event": {
+          "feasible": true,
+          "errors": [],
+          "objective": [
+            0,
+            0,
+            0,
+            0,
+            10,
+            1
+          ],
+          "unassigned": [],
+          "metrics": {
+            "critical_unassigned": 0,
+            "other_unassigned": 0,
+            "technician_changes": 0,
+            "start_shift_minutes": 0,
+            "travel_minutes": 10,
+            "wait_minutes": 1,
+            "current_cancellations": 0
+          },
+          "history_travel": "NOT_VERIFIABLE_FROM_SNAPSHOT"
+        },
+        "original_plan_after_event": {
+          "feasible": true,
+          "errors": [],
+          "objective": [
+            0,
+            0,
+            0,
+            0,
+            10,
+            1
+          ],
+          "unassigned": [],
+          "metrics": {
+            "critical_unassigned": 0,
+            "other_unassigned": 0,
+            "technician_changes": 0,
+            "start_shift_minutes": 0,
+            "travel_minutes": 10,
+            "wait_minutes": 1,
+            "current_cancellations": 0
+          },
+          "history_travel": "NOT_VERIFIABLE_FROM_SNAPSHOT"
+        },
+        "exact": {
+          "status": "FEASIBLE",
+          "optimal": true,
+          "search_exhausted": true,
+          "candidates": 143,
+          "plan": [
+            {
+              "job": "j0",
+              "technician": "t0",
+              "start": 3
+            },
+            {
+              "job": "j1",
+              "technician": "t1",
+              "start": 3
+            }
+          ],
+          "evaluation": {
+            "feasible": true,
+            "errors": [],
+            "objective": [
+              0,
+              0,
+              0,
+              0,
+              10,
+              1
+            ],
+            "unassigned": [],
+            "metrics": {
+              "critical_unassigned": 0,
+              "other_unassigned": 0,
+              "technician_changes": 0,
+              "start_shift_minutes": 0,
+              "travel_minutes": 10,
+              "wait_minutes": 1,
+              "current_cancellations": 0
+            },
+            "history_travel": "NOT_VERIFIABLE_FROM_SNAPSHOT"
+          },
+          "wall_seconds": 0.00456419699912658
+        },
+        "control": {
+          "status": "FEASIBLE",
+          "optimal": false,
+          "plan": [
+            {
+              "job": "j1",
+              "technician": "t1",
+              "start": 3
+            },
+            {
+              "job": "j0",
+              "technician": "t0",
+              "start": 3
+            }
+          ],
+          "evaluation": {
+            "feasible": true,
+            "errors": [],
+            "objective": [
+              0,
+              0,
+              0,
+              0,
+              10,
+              1
+            ],
+            "unassigned": [],
+            "metrics": {
+              "critical_unassigned": 0,
+              "other_unassigned": 0,
+              "technician_changes": 0,
+              "start_shift_minutes": 0,
+              "travel_minutes": 10,
+              "wait_minutes": 1,
+              "current_cancellations": 0
+            },
+            "history_travel": "NOT_VERIFIABLE_FROM_SNAPSHOT"
+          },
+          "budget_exhausted": false,
+          "candidates": 22,
+          "wall_seconds": 0.0007653639986529015
+        },
+        "total_wall_seconds": 0.00570739500108175
+      },
+      {
+        "seed": 108,
+        "event": "absence",
+        "input_sha256": "bc0ff551ab1965d1a02040eeff864348d9cbdf366ddfd04f5ea792fa870522fc",
+        "original_plan_before_event": {
+          "feasible": true,
+          "errors": [],
+          "objective": [
+            0,
+            0,
+            0,
+            0,
+            6,
+            3
+          ],
+          "unassigned": [],
+          "metrics": {
+            "critical_unassigned": 0,
+            "other_unassigned": 0,
+            "technician_changes": 0,
+            "start_shift_minutes": 0,
+            "travel_minutes": 6,
+            "wait_minutes": 3,
+            "current_cancellations": 0
+          },
+          "history_travel": "NOT_VERIFIABLE_FROM_SNAPSHOT"
+        },
+        "original_plan_after_event": {
+          "feasible": false,
+          "errors": [
+            "UNAVAILABLE"
+          ],
+          "objective": [
+            0,
+            0,
+            0,
+            0,
+            6,
+            3
+          ],
+          "unassigned": [],
+          "metrics": {
+            "critical_unassigned": 0,
+            "other_unassigned": 0,
+            "technician_changes": 0,
+            "start_shift_minutes": 0,
+            "travel_minutes": 6,
+            "wait_minutes": 3,
+            "current_cancellations": 0
+          },
+          "history_travel": "NOT_VERIFIABLE_FROM_SNAPSHOT"
+        },
+        "exact": {
+          "status": "FEASIBLE",
+          "optimal": true,
+          "search_exhausted": true,
+          "candidates": 169,
+          "plan": [
+            {
+              "job": "j0",
+              "technician": "t1",
+              "start": 1
+            },
+            {
+              "job": "j1",
+              "technician": "t1",
+              "start": 4
+            }
+          ],
+          "evaluation": {
+            "feasible": true,
+            "errors": [],
+            "objective": [
+              0,
+              0,
+              1,
+              3,
+              4,
+              0
+            ],
+            "unassigned": [],
+            "metrics": {
+              "critical_unassigned": 0,
+              "other_unassigned": 0,
+              "technician_changes": 1,
+              "start_shift_minutes": 3,
+              "travel_minutes": 4,
+              "wait_minutes": 0,
+              "current_cancellations": 0
+            },
+            "history_travel": "NOT_VERIFIABLE_FROM_SNAPSHOT"
+          },
+          "wall_seconds": 0.005488820999744348
+        },
+        "control": {
+          "status": "FEASIBLE",
+          "optimal": false,
+          "plan": [
+            {
+              "job": "j0",
+              "technician": "t1",
+              "start": 3
+            },
+            {
+              "job": "j1",
+              "technician": "t1",
+              "start": 6
+            }
+          ],
+          "evaluation": {
+            "feasible": true,
+            "errors": [],
+            "objective": [
+              0,
+              0,
+              1,
+              3,
+              4,
+              2
+            ],
+            "unassigned": [],
+            "metrics": {
+              "critical_unassigned": 0,
+              "other_unassigned": 0,
+              "technician_changes": 1,
+              "start_shift_minutes": 3,
+              "travel_minutes": 4,
+              "wait_minutes": 2,
+              "current_cancellations": 0
+            },
+            "history_travel": "NOT_VERIFIABLE_FROM_SNAPSHOT"
+          },
+          "budget_exhausted": false,
+          "candidates": 24,
+          "wall_seconds": 0.0008721260019228794
+        },
+        "total_wall_seconds": 0.006692975002806634
+      },
+      {
+        "seed": 109,
+        "event": "urgent",
+        "input_sha256": "c55185b88fa42432e1c2c89368aa2d8a83eec174d5f2c7d918c570ff63247c5d",
+        "original_plan_before_event": {
+          "feasible": true,
+          "errors": [],
+          "objective": [
+            0,
+            0,
+            0,
+            0,
+            6,
+            3
+          ],
+          "unassigned": [],
+          "metrics": {
+            "critical_unassigned": 0,
+            "other_unassigned": 0,
+            "technician_changes": 0,
+            "start_shift_minutes": 0,
+            "travel_minutes": 6,
+            "wait_minutes": 3,
+            "current_cancellations": 0
+          },
+          "history_travel": "NOT_VERIFIABLE_FROM_SNAPSHOT"
+        },
+        "original_plan_after_event": {
+          "feasible": true,
+          "errors": [],
+          "objective": [
+            1,
+            0,
+            0,
+            0,
+            6,
+            3
+          ],
+          "unassigned": [
+            {
+              "job": "urgent",
+              "reason": "NOT_SELECTED_NOT_PROVEN_IMPOSSIBLE"
+            }
+          ],
+          "metrics": {
+            "critical_unassigned": 1,
+            "other_unassigned": 0,
+            "technician_changes": 0,
+            "start_shift_minutes": 0,
+            "travel_minutes": 6,
+            "wait_minutes": 3,
+            "current_cancellations": 0
+          },
+          "history_travel": "NOT_VERIFIABLE_FROM_SNAPSHOT"
+        },
+        "exact": {
+          "status": "FEASIBLE",
+          "optimal": true,
+          "search_exhausted": true,
+          "candidates": 819,
+          "plan": [
+            {
+              "job": "j0",
+              "technician": "t0",
+              "start": 3
+            },
+            {
+              "job": "j1",
+              "technician": "t1",
+              "start": 6
+            },
+            {
+              "job": "urgent",
+              "technician": "t1",
+              "start": 2
+            }
+          ],
+          "evaluation": {
+            "feasible": true,
+            "errors": [],
+            "objective": [
+              0,
+              0,
+              0,
+              3,
+              8,
+              1
+            ],
+            "unassigned": [],
+            "metrics": {
+              "critical_unassigned": 0,
+              "other_unassigned": 0,
+              "technician_changes": 0,
+              "start_shift_minutes": 3,
+              "travel_minutes": 8,
+              "wait_minutes": 1,
+              "current_cancellations": 0
+            },
+            "history_travel": "NOT_VERIFIABLE_FROM_SNAPSHOT"
+          },
+          "wall_seconds": 0.030406316996959504
+        },
+        "control": {
+          "status": "FEASIBLE",
+          "optimal": false,
+          "plan": [
+            {
+              "job": "urgent",
+              "technician": "t0",
+              "start": 2
+            },
+            {
+              "job": "j0",
+              "technician": "t1",
+              "start": 3
+            },
+            {
+              "job": "j1",
+              "technician": "t0",
+              "start": 6
+            }
+          ],
+          "evaluation": {
+            "feasible": true,
+            "errors": [],
+            "objective": [
+              0,
+              0,
+              2,
+              3,
+              8,
+              1
+            ],
+            "unassigned": [],
+            "metrics": {
+              "critical_unassigned": 0,
+              "other_unassigned": 0,
+              "technician_changes": 2,
+              "start_shift_minutes": 3,
+              "travel_minutes": 8,
+              "wait_minutes": 1,
+              "current_cancellations": 0
+            },
+            "history_travel": "NOT_VERIFIABLE_FROM_SNAPSHOT"
+          },
+          "budget_exhausted": false,
+          "candidates": 26,
+          "wall_seconds": 0.0010689349946915172
+        },
+        "total_wall_seconds": 0.03192280200164532
+      },
+      {
+        "seed": 110,
+        "event": "duration",
+        "input_sha256": "d48e9e2cf7a92e2c80aa8a660929fc0acc92c6a10fed5c7e99caf631502ab412",
+        "original_plan_before_event": {
+          "feasible": true,
+          "errors": [],
+          "objective": [
+            0,
+            0,
+            0,
+            0,
+            8,
+            2
+          ],
+          "unassigned": [],
+          "metrics": {
+            "critical_unassigned": 0,
+            "other_unassigned": 0,
+            "technician_changes": 0,
+            "start_shift_minutes": 0,
+            "travel_minutes": 8,
+            "wait_minutes": 2,
+            "current_cancellations": 0
+          },
+          "history_travel": "NOT_VERIFIABLE_FROM_SNAPSHOT"
+        },
+        "original_plan_after_event": {
+          "feasible": true,
+          "errors": [],
+          "objective": [
+            0,
+            0,
+            0,
+            0,
+            8,
+            2
+          ],
+          "unassigned": [],
+          "metrics": {
+            "critical_unassigned": 0,
+            "other_unassigned": 0,
+            "technician_changes": 0,
+            "start_shift_minutes": 0,
+            "travel_minutes": 8,
+            "wait_minutes": 2,
+            "current_cancellations": 0
+          },
+          "history_travel": "NOT_VERIFIABLE_FROM_SNAPSHOT"
+        },
+        "exact": {
+          "status": "FEASIBLE",
+          "optimal": true,
+          "search_exhausted": true,
+          "candidates": 143,
+          "plan": [
+            {
+              "job": "j0",
+              "technician": "t0",
+              "start": 3
+            },
+            {
+              "job": "j1",
+              "technician": "t1",
+              "start": 3
+            }
+          ],
+          "evaluation": {
+            "feasible": true,
+            "errors": [],
+            "objective": [
+              0,
+              0,
+              0,
+              0,
+              8,
+              2
+            ],
+            "unassigned": [],
+            "metrics": {
+              "critical_unassigned": 0,
+              "other_unassigned": 0,
+              "technician_changes": 0,
+              "start_shift_minutes": 0,
+              "travel_minutes": 8,
+              "wait_minutes": 2,
+              "current_cancellations": 0
+            },
+            "history_travel": "NOT_VERIFIABLE_FROM_SNAPSHOT"
+          },
+          "wall_seconds": 0.004618516999471467
+        },
+        "control": {
+          "status": "FEASIBLE",
+          "optimal": false,
+          "plan": [
+            {
+              "job": "j1",
+              "technician": "t1",
+              "start": 3
+            },
+            {
+              "job": "j0",
+              "technician": "t0",
+              "start": 3
+            }
+          ],
+          "evaluation": {
+            "feasible": true,
+            "errors": [],
+            "objective": [
+              0,
+              0,
+              0,
+              0,
+              8,
+              2
+            ],
+            "unassigned": [],
+            "metrics": {
+              "critical_unassigned": 0,
+              "other_unassigned": 0,
+              "technician_changes": 0,
+              "start_shift_minutes": 0,
+              "travel_minutes": 8,
+              "wait_minutes": 2,
+              "current_cancellations": 0
+            },
+            "history_travel": "NOT_VERIFIABLE_FROM_SNAPSHOT"
+          },
+          "budget_exhausted": false,
+          "candidates": 22,
+          "wall_seconds": 0.0008053100027609617
+        },
+        "total_wall_seconds": 0.005751246004365385
+      }
+    ]
+  },
+  "tested_code_sha": "c37b2bcee4d56fe13cc034632d156454be1a0f79",
+  "run_date": "2026-09-07"
+}
