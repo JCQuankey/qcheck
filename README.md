@@ -8,9 +8,12 @@ missing measurements, parse errors - so agents and developers can improve quantu
 code before it reaches humans, CI, or simulators. Tiny, dependency-free, and it
 reviews code without ever executing it.
 
-Why it matters: LLMs write quantum code that fails to run **40-70% of the time**
-one-shot (QuanBench+ 2026: Qiskit 59.5% / PennyLane 42.9% pass; QCoder 2026: ~70%
-one-shot failure). qcheck catches the avoidable share of that early.
+Why it matters: quantum code generation still needs independent checks.
+[QuanBench+](https://arxiv.org/abs/2604.08570) reports best one-shot functional
+test scores of 59.5% for Qiskit and 42.9% for PennyLane on its evaluated tasks
+and models. These are benchmark-specific results, not a general runtime failure
+rate or a measurement of qcheck's effectiveness. qcheck provides an early static
+review signal; tests and simulators are still needed to check behavior.
 
 ```bash
 qcheck verify circuit.qasm
@@ -248,6 +251,12 @@ makes qcheck sharper and feeds the public error taxonomy.
 
 - Technical questions / maintainer contact: **dev@quankey.xyz**
 - Security issues: **security@quankey.xyz** (see [`SECURITY.md`](https://github.com/JCQuankey/qcheck/blob/main/SECURITY.md))
+
+For a potential paid pilot, describe a recurring quantum-code failure and the
+evidence your workflow needs to **dev@quankey.xyz**. Start with a non-confidential
+summary. Scope, deliverables and price must be agreed before payment; hosted
+verification and checked repairs are not available as a self-service product
+today. The local CLI and GitHub Action remain free under Apache-2.0.
 
 Maintained by JCQuankey / qcheck contributors. qcheck runs locally, sends no
 telemetry, and reviews code without executing it.
